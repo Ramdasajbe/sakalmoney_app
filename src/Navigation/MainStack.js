@@ -9,11 +9,12 @@ import RegistrationTwo from '../screen/RegistrationTwo';
 import RegistrationThree from '../screen/RegistrationThree';
 
 import Form from '../screen/Form';
+import SideMenuStack from './SideMenuStack';
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           options={{headerShown: false}}
           name="Form"

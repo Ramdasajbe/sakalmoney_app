@@ -128,7 +128,10 @@ const RegistrationThree = ({navigation}) => {
                 color="white"
               />
             </View>
-            <Text style={styles.title1}>Registration</Text>
+            {/* <Text style={styles.title1}>Registration</Text> */}
+          </View>
+          <View style={styles.title}>
+            <Text style={styles.title1}>Registration Form</Text>
           </View>
           <View style={styles.cardOne}>
             <TextInput
@@ -345,9 +348,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title1: {
-    color: 'white',
-    fontWeight: '400',
-    fontSize: 20,
+    color: 'black',
+    fontWeight: '800',
+    fontSize: 30,
     margin: 15,
+  },
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
