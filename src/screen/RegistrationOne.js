@@ -22,7 +22,9 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
 const RegistrationOne = ({navigation}) => {
   //states for upload profile image
 
@@ -45,6 +47,9 @@ const RegistrationOne = ({navigation}) => {
 
   const [mobileNumberError, setmobileNumberError] = useState('');
   const [emailIdError, setemailIdError] = useState('');
+  const [uploadImage, setUploadImage] = useState(false);
+  const [imageURI, setImageURI] = useState('');
+  const [loading, setLoading] = useState(false);
 
   //post form data
   const handleSubmitPress = async () => {
@@ -127,6 +132,9 @@ const RegistrationOne = ({navigation}) => {
     }
   };
 
+  if (loading) {
+    return <ActivityIndicator />;
+  }
   return (
     <>
       <View style={styles.container}>
@@ -163,7 +171,7 @@ const RegistrationOne = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <FontAwesome5 name="unlock-alt" size={20} />}
+                  name={() => <Feather name={'user'} size={20} />}
                 />
               }
             />
@@ -219,7 +227,7 @@ const RegistrationOne = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'user'} size={20} />}
+                  name={() => <IconHeader name={'mobile-phone'} size={25} />}
                 />
               }
             />
@@ -262,7 +270,31 @@ const RegistrationOne = ({navigation}) => {
               {emailIdError.length > 0 && <Text>{emailIdError}</Text>}
             </Text>
           </View>
-
+          <View>
+            <TouchableOpacity
+              onPress={() => setUploadImage(!uploadImage)}
+              style={styles.cardButtonUpload}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Upload Profile Photo
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <PickerImageSourceModal
+            source="adharCardImg"
+            imageType="adharCardImage"
+            show={uploadImage}
+            hide={() => setUploadImage(!uploadImage)}
+            loading={_loadingState => {
+              setLoading(_loadingState);
+            }}
+            setImage={returnImageUri => setImageURI(returnImageUri)}
+          />
           <TouchableOpacity
             style={styles.cardButton}
             // onPress={handleSubmitPress}
@@ -275,6 +307,7 @@ const RegistrationOne = ({navigation}) => {
                 textAlign: 'center',
                 fontWeight: 'bold',
                 fontSize: 20,
+                color: 'white',
               }}>
               Next
             </Text>
@@ -377,7 +410,16 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 25,
     margin: 20,
-    backgroundColor: '#7DC383',
+    backgroundColor: '#063B7B',
+    marginBottom: 10,
+    fontFamily: 'Montserrat-Thin',
+  },
+  cardButtonUpload: {
+    height: 'auto',
+    elevation: 5,
+    borderRadius: 25,
+    margin: 20,
+    backgroundColor: '#F7EE78',
     marginBottom: 10,
     fontFamily: 'Montserrat-Thin',
   },

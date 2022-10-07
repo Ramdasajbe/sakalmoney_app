@@ -100,24 +100,17 @@ const NavigationDrawerStructure = props => {
 
 function SideMenuStack() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        drawerContentOptions={{
-          activeTintColor: '#e91e63',
-          itemStyle: {marginVertical: 5},
-        }}>
-        <Drawer.Screen
-          name="Form"
-          options={{drawerLabel: 'First page Option'}}
-          component={Form}
-        />
-        <Drawer.Screen
-          name="Login"
-          options={{drawerLabel: 'Second page Option'}}
-          component={Form}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Drawer.Navigator
+      drawerContentOptions={{
+        activeTintColor: '#e91e63',
+        itemStyle: {marginVertical: 5},
+      }}>
+      <Drawer.Screen
+        name="Form"
+        options={{drawerLabel: 'Second page Option'}}
+        component={Form}
+      />
+    </Drawer.Navigator>
   );
 }
 

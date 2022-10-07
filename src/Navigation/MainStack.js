@@ -9,7 +9,10 @@ import RegistrationTwo from '../screen/RegistrationTwo';
 import RegistrationThree from '../screen/RegistrationThree';
 
 import Form from '../screen/Form';
+
+import ForgotPassword from '../components/ForgotPassword';
 import SideMenuStack from './SideMenuStack';
+
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
@@ -17,8 +20,8 @@ const MainStack = () => {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           options={{headerShown: false}}
-          name="Form"
-          component={Form}
+          name="SideMenuStack"
+          component={SideMenuStack}
         />
         <Stack.Screen
           options={{headerShown: false}}
@@ -40,6 +43,16 @@ const MainStack = () => {
           name="RegistrationThree"
           component={RegistrationThree}
         />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="ForgotPassword"
+          component={ForgotPassword}
+        />
+        {/* <Stack.Screen
+          options={{headerShown: false}}
+          name="Forms"
+          component={Form}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

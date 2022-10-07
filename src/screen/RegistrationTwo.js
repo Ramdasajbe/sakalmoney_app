@@ -19,9 +19,11 @@ import axios from 'axios';
 import {TextInput} from 'react-native-paper';
 
 import Feather from 'react-native-vector-icons/Feather';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 const RegistrationTwo = ({navigation}) => {
   const [userDetails, setuserDetails] = useState({
@@ -157,7 +159,7 @@ const RegistrationTwo = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'user'} size={20} />}
+                  name={() => <IconHeader name={'bank'} size={20} />}
                 />
               }
             />
@@ -185,7 +187,9 @@ const RegistrationTwo = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'user'} size={20} />}
+                  name={() => (
+                    <MaterialCommunityIcons name={'book-account'} size={20} />
+                  )}
                 />
               }
             />
@@ -215,12 +219,7 @@ const RegistrationTwo = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => (
-                    <MaterialCommunityIcons
-                      name={'email-edit-outline'}
-                      size={20}
-                    />
-                  )}
+                  name={() => <Octicons name={'number'} size={20} />}
                 />
               }
             />
@@ -249,10 +248,7 @@ const RegistrationTwo = ({navigation}) => {
               left={
                 <TextInput.Icon
                   name={() => (
-                    <MaterialCommunityIcons
-                      name={'email-edit-outline'}
-                      size={20}
-                    />
+                    <MaterialCommunityIcons name={'source-branch'} size={20} />
                   )}
                 />
               }
@@ -272,6 +268,7 @@ const RegistrationTwo = ({navigation}) => {
             <Text
               style={{
                 margin: 10,
+                color: 'white',
                 textAlign: 'center',
                 fontWeight: 'bold',
                 fontSize: 20,
@@ -329,9 +326,9 @@ const styles = StyleSheet.create({
     height: 'auto',
     elevation: 5,
     borderRadius: 25,
-    margin: 20,
-    backgroundColor: '#7DC383',
-    marginBottom: 10,
+    margin: 10,
+    backgroundColor: '#00618a',
+    marginBottom: 5,
     fontFamily: 'Montserrat-Thin',
   },
 

@@ -11,11 +11,11 @@ import {
 import {Modal} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import AsyncWriter from '../../utils/AsyncWriter';
-import {useUser} from '../hooks/useUser';
+import AsyncWriter from './AsyncWriter';
+// import {useUser} from '../hooks/useUser';
 import ImagePicker from 'react-native-image-crop-picker';
 import {API} from '../../api/api';
-import {userAccessApi} from '../../api/userAccessApi';
+// import {userAccessApi} from '../../api/userAccessApi';
 import {RNS3} from 'react-native-aws3';
 
 export class PickerImageSourceModal extends Component {
@@ -138,8 +138,10 @@ export class PickerImageSourceModal extends Component {
         }
         console.log(response.body.postResponse.location);
       })
+
       .catch(err => {
         Alert.alert('Error', 'Error Please Try Again !');
+        this.props.loading(false);
       });
   };
   handleRNS3ImageUpload = (uri, fileName, type) => {
@@ -210,7 +212,7 @@ export class PickerImageSourceModal extends Component {
 
   handleProfilePhotoSync = (yin_id, profile_image_url) => {
     // update profile image url
-    userAccessApi.updateProfilePhoto(yin_id, profile_image_url);
+    // userAccessApi.updateProfilePhoto(yin_id, profile_image_url);
   };
 
   getBlob = async fileUri => {
@@ -226,11 +228,11 @@ export class PickerImageSourceModal extends Component {
     let yin_id = user.yin_id;
     let college_code = user.college_code;
     // get presigned url
-    let presignedUrl = await userAccessApi.getPresignedUrl(
-      yin_id,
-      'profile_images',
-      college_code,
-    );
+    // let presignedUrl = await userAccessApi.getPresignedUrl(
+    //   yin_id,
+    //   'profile_images',
+    //   college_code,
+    // );
     //
     console.log('Get presigned url success');
     console.log(presignedUrl.data);
@@ -259,7 +261,7 @@ export class PickerImageSourceModal extends Component {
       console.error(error);
       alert('Image could not be uploaded');
     }
-    useUser();
+    // useUser();
     this.props.loading(false);
     this.props.hookAfterUploadSuccess
       ? this.props.hookAfterUploadSuccess()
@@ -274,7 +276,7 @@ export class PickerImageSourceModal extends Component {
         style={{
           padding: 20,
           // flex: 1,
-          // zIndex:10
+          // zIndex: 10,
         }}
         onDismiss={() => this.props.hide()}
         onPress={() => this.props.hide()}>

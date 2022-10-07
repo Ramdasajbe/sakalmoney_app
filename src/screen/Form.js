@@ -102,11 +102,11 @@ import IconHeader from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const Form = ({navigation}) => {
   //states for upload profile image
-  const [selectDate, setselectDate] = useState(new Date());
+  const [Disbersment, setDisbersment] = useState(new Date());
   const [userDetails, setuserDetails] = useState({
-    Date: selectDate,
-    // firstname: PoliceData.firstName,
-    // lastName: PoliceData.lastName,
+    // Date: Disbersment,
+    // LoanAcNumber: PoliceData.LoanAcNumber,
+    // CBSACNumber: PoliceData.CBSACNumber,
     // gender: PoliceData.gender,
     // Date: PoliceData.Date,
     // blood_group: PoliceData.blood_group,
@@ -126,45 +126,49 @@ const Form = ({navigation}) => {
 
   function onDateSelected(event, value) {
     setDatePicker(false);
-    setselectDate(value);
+    setDisbersment(value);
   }
-  const [firstnameError, setfirstnameError] = useState('');
-  const [lastNameError, setlastNameError] = useState('');
+  const [LoanAcNumberError, setLoanAcNumberError] = useState('');
+  const [CBSACNumberError, setCBSACNumberError] = useState('');
 
-  const [mobileNumberError, setmobileNumberError] = useState('');
+  const [Sourcing_DateError, setSourcing_DateError] = useState('');
   const [DateError, setDateError] = useState('');
 
   //post form data
   const handleSubmitPress = async () => {
     const regForDate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const regForfirstnameAndlastName = /^[A-Za-z]+$/;
-    if (userDetails.firstname === '') {
-      setfirstnameError('Please enter first name');
-    } else if (!regForfirstnameAndlastName.test(userDetails.firstname)) {
-      setfirstnameError('Invalid First Name');
-    } else if (userDetails.lastName === '') {
-      setfirstnameError('');
-      setlastNameError('Please enter last name');
-    } else if (!regForfirstnameAndlastName.test(userDetails.lastName)) {
-      setfirstnameError('');
-      setlastNameError('Invalid Last Name');
+    const regForLoanAcNumberAndCBSACNumber = /^[A-Za-z]+$/;
+    if (userDetails.LoanAcNumber === '') {
+      setLoanAcNumberError('Please enter first name');
+    } else if (
+      !regForLoanAcNumberAndCBSACNumber.test(userDetails.LoanAcNumber)
+    ) {
+      setLoanAcNumberError('Invalid First Name');
+    } else if (userDetails.CBSACNumber === '') {
+      setLoanAcNumberError('');
+      setCBSACNumberError('Please enter last name');
+    } else if (
+      !regForLoanAcNumberAndCBSACNumber.test(userDetails.CBSACNumber)
+    ) {
+      setLoanAcNumberError('');
+      setCBSACNumberError('Invalid Last Name');
     } else if (userDetails.Date === '') {
-      setfirstnameError('');
-      setlastNameError('');
+      setLoanAcNumberError('');
+      setCBSACNumberError('');
       setDateError('Please enter Date Id');
     } else if (!regForDate.test(userDetails.Date)) {
-      setfirstnameError('');
-      setlastNameError('');
+      setLoanAcNumberError('');
+      setCBSACNumberError('');
 
       setDateError('Invalid Date');
     } else if (userDetails.YearOfBirth === '') {
-      setfirstnameError('');
-      setlastNameError('');
+      setLoanAcNumberError('');
+      setCBSACNumberError('');
 
       setDateError('');
     } else {
-      setfirstnameError('');
-      setlastNameError('');
+      setLoanAcNumberError('');
+      setCBSACNumberError('');
 
       setDateError('');
 
@@ -172,8 +176,8 @@ const Form = ({navigation}) => {
       let userData = JSON.parse(await AsyncStorage.getItem('userData'));
       if (userData) {
         const user = {
-          firstName: userDetails.firstname,
-          lastName: userDetails.lastName,
+          LoanAcNumber: userDetails.LoanAcNumber,
+          CBSACNumber: userDetails.CBSACNumber,
           Date: userDetails.Date,
 
           gender: userDetails.gender,
@@ -221,26 +225,15 @@ const Form = ({navigation}) => {
         <ScrollView
           style={{paddingTop: 0}}
           keyboardShouldPersistTaps={'handled'}>
-          <View style={styles.header}>
-            <View style={styles.iconHeader}>
-              <IconHeader
-                onPress={() => navigation.goBack()}
-                name="angle-left"
-                size={30}
-                color="white"
-              />
-            </View>
-            <Text style={styles.title1}>Form</Text>
-          </View>
           <View style={styles.cardOne}>
             <TextInput
               style={{borderColor: '#fff', color: '#fff'}}
-              value={userDetails.firstname}
-              onChangeText={first_name =>
-                setuserDetails({...userDetails, first_name})
+              value={userDetails.LoanAcNumber}
+              onChangeText={LoanAcNumber =>
+                setuserDetails({...userDetails, LoanAcNumber})
               }
               mode="outlined"
-              label="First Name"
+              label="Loan A.C. Number"
               placeholderTextColor="#180A0A"
               returnKeyType="next"
               theme={{
@@ -255,7 +248,7 @@ const Form = ({navigation}) => {
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {<Text>{firstnameError}</Text>}
+              {<Text>{LoanAcNumberError}</Text>}
             </Text>
           </View>
 
@@ -263,12 +256,12 @@ const Form = ({navigation}) => {
             <TextInput
               style={{borderColor: '#fff', color: '#fff'}}
               placeholderTextColor="#180A0A"
-              value={userDetails.lastName}
-              onChangeText={lastName =>
-                setuserDetails({...userDetails, lastName})
+              value={userDetails.CBSACNumber}
+              onChangeText={CBSACNumber =>
+                setuserDetails({...userDetails, CBSACNumber})
               }
               mode="outlined"
-              label="lastName"
+              label="CBS A.C. Number"
               returnKeyType="next"
               onSubmitEditing={Keyboard.dismiss}
               theme={{
@@ -283,20 +276,20 @@ const Form = ({navigation}) => {
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {lastNameError.length > 0 && <Text>{lastNameError}</Text>}
+              {CBSACNumberError.length > 0 && <Text>{CBSACNumberError}</Text>}
             </Text>
           </View>
 
           <View style={styles.cardOne}>
             <TextInput
               placeholderTextColor="#180A0A"
-              value={userDetails.mobileNumber}
-              onChangeText={mobileNumber =>
-                setuserDetails({...userDetails, mobileNumber})
+              value={userDetails.Sourcing_Date}
+              onChangeText={Sourcing_Date =>
+                setuserDetails({...userDetails, Sourcing_Date})
               }
               mode="outlined"
-              label="mobile Number"
-              placeholder="Enter mobile Number"
+              label="Sourceing Date"
+              placeholder="select Sourceing Date"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -309,19 +302,43 @@ const Form = ({navigation}) => {
               }
             />
           </View>
+          {/* {datePicker && (
+            <DateTimePicker
+              value={Disbersment}
+              mode={'date'}
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              is24Hour={true}
+              onChange={onDateSelected}
+              style={StyleSheet.datePicker}
+            />
+          )}
+
+          {!datePicker && (
+            <View style={{margin: 10}}>
+              <Button
+                title="Select disbersment date"
+                color="green"
+                onPress={showDatePicker}
+              />
+            </View>
+          )} */}
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {mobileNumberError.length > 0 && <Text>{mobileNumberError}</Text>}
+              {Sourcing_DateError.length > 0 && (
+                <Text>{Sourcing_DateError}</Text>
+              )}
             </Text>
           </View>
           <View style={styles.cardOne}>
             <TextInput
               placeholderTextColor="#180A0A"
-              value={selectDate.toDateString()}
-              onChangeText={Date => setuserDetails({...userDetails, Date})}
+              value={Disbersment.toDateString()}
+              onChangeText={Sourcing =>
+                setuserDetails({...userDetails, Sourcing})
+              }
               mode="outlined"
-              label="Date"
-              placeholder="Enter Date"
+              label="Sourcing Date"
+              placeholder="Select Sourcing Date"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -339,12 +356,10 @@ const Form = ({navigation}) => {
               }
             />
           </View>
-          {/* <Text style={StyleSheet.text}>
-            Date = {selectDate.toDateString()}
-          </Text> */}
+
           {datePicker && (
             <DateTimePicker
-              value={selectDate}
+              value={Disbersment}
               mode={'date'}
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               is24Hour={true}
@@ -356,7 +371,7 @@ const Form = ({navigation}) => {
           {!datePicker && (
             <View style={{margin: 10}}>
               <Button
-                title="Show Date Picker"
+                title="Select disbersment date"
                 color="green"
                 onPress={showDatePicker}
               />

@@ -15,9 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
-
 import {TextInput} from 'react-native-paper';
-
 const Login = ({navigation}) => {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
@@ -219,7 +217,9 @@ const Login = ({navigation}) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cardButton}>
+          <TouchableOpacity
+            style={styles.cardButton}
+            onPress={() => navigation.navigate('SideMenuStack')}>
             <Text
               style={{
                 margin: 10,
@@ -244,7 +244,7 @@ const Login = ({navigation}) => {
                 textAlign: 'center',
                 fontWeight: 'bold',
                 fontSize: 20,
-                color: '#7DC383',
+                color: '#063B7B',
               }}>
               Create New Accout
             </Text>

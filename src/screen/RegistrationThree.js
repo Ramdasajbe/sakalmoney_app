@@ -15,6 +15,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
+import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
 
 const RegistrationThree = ({navigation}) => {
   const [userDetails, setuserDetails] = useState({
@@ -29,7 +30,13 @@ const RegistrationThree = ({navigation}) => {
 
   const [CheckNumberError, setCheckNumberError] = useState('');
   const [BranchNameError, setBranchNameError] = useState('');
-
+  const [PanCardImage, setPanCardImage] = useState(false);
+  const [PanCardimageURI, SetPanCardimageURI] = useState('');
+  const [AdharCardImage, setAdharCardImage] = useState(false);
+  const [AdharimageURI, setAdharimageURI] = useState('');
+  const [CheckImage, setCheckImage] = useState(false);
+  const [CheckimageURI, setCheckimageURI] = useState('');
+  const [loading, setLoading] = useState(false);
   //post form data
   //   const handleSubmitPress = async () => {
   //     const regForBranchName = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -149,10 +156,25 @@ const RegistrationThree = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'email-edit-outline'} size={20} />}
+                  name={() => <IconHeader name={'credit-card'} size={20} />}
                 />
               }
             />
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => setPanCardImage(!PanCardImage)}
+              style={styles.cardButtonUpload}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Upload Pan Card
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
@@ -177,10 +199,25 @@ const RegistrationThree = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'email-edit-outline'} size={20} />}
+                  name={() => <IconHeader name={'vcard'} size={20} />}
                 />
               }
             />
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => setAdharCardImage(!AdharCardImage)}
+              style={styles.cardButtonUpload}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Upload Adhar Card
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
@@ -196,8 +233,8 @@ const RegistrationThree = ({navigation}) => {
                 setuserDetails({...userDetails, CheckNumber})
               }
               mode="outlined"
-              label="Check Number"
-              placeholder="Enter Check Number"
+              label="Cheque Number"
+              placeholder="Enter Cheque Number"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -205,15 +242,25 @@ const RegistrationThree = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => (
-                    <MaterialCommunityIcons
-                      name={'email-edit-outline'}
-                      size={20}
-                    />
-                  )}
+                  name={() => <IconHeader name={'credit-card-alt'} size={20} />}
                 />
               }
             />
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => setCheckImage(!CheckImage)}
+              style={styles.cardButtonUpload}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Upload Check
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
@@ -225,6 +272,7 @@ const RegistrationThree = ({navigation}) => {
             <Text
               style={{
                 margin: 10,
+                color: 'white',
                 textAlign: 'center',
                 fontWeight: 'bold',
                 fontSize: 20,
@@ -234,6 +282,38 @@ const RegistrationThree = ({navigation}) => {
           </TouchableOpacity>
           <View style={{paddingTop: 40}}></View>
         </ScrollView>
+        <PickerImageSourceModal
+          source="adharCardImg"
+          imageType="adharCardImage"
+          show={PanCardImage}
+          hide={() => setPanCardImage(!PanCardImage)}
+          loading={_loadingState => {
+            setLoading(_loadingState);
+          }}
+          setImage={returnImageUri => SetPanCardimageURI(returnImageUri)}
+        />
+
+        <PickerImageSourceModal
+          source="adharCardImg"
+          imageType="adharCardImage"
+          show={AdharCardImage}
+          hide={() => setAdharCardImage(!AdharCardImage)}
+          loading={_loadingState => {
+            setLoading(_loadingState);
+          }}
+          setImage={returnImageUri => setAdharimageURI(returnImageUri)}
+        />
+
+        <PickerImageSourceModal
+          source="adharCardImg"
+          imageType="adharCardImage"
+          show={CheckImage}
+          hide={() => setCheckImage(!CheckImage)}
+          loading={_loadingState => {
+            setLoading(_loadingState);
+          }}
+          setImage={returnImageUri => setCheckimageURI(returnImageUri)}
+        />
       </View>
     </>
   );
@@ -275,16 +355,16 @@ const styles = StyleSheet.create({
     height: 'auto',
     marginLeft: 25,
     marginRight: 25,
-    marginBottom: 10,
+    marginBottom: 7,
     paddingLeft: 10,
   },
   cardButton: {
     height: 'auto',
     elevation: 5,
     borderRadius: 25,
-    margin: 20,
-    backgroundColor: '#7DC383',
-    marginBottom: 10,
+    margin: 10,
+    backgroundColor: '#00618a',
+    marginBottom: 5,
     fontFamily: 'Montserrat-Thin',
   },
 
@@ -357,5 +437,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  cardButtonUpload: {
+    height: 'auto',
+    elevation: 5,
+    borderRadius: 25,
+    margin: 20,
+    backgroundColor: '#F7EE78',
+    marginBottom: 10,
+    fontFamily: 'Montserrat-Thin',
   },
 });
