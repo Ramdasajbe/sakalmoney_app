@@ -7,6 +7,7 @@ import {
   Dimensions,
   ScrollView,
   Keyboard,
+  Alert,
 } from 'react-native';
 
 import {TextInput} from 'react-native-paper';
@@ -19,15 +20,13 @@ import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
 
 const RegistrationThree = ({navigation}) => {
   const [userDetails, setuserDetails] = useState({
-    // PanCardNumber: PoliceData.PanCardNumber,
-    // AdharCard: PoliceData.AdharCard,
-    // gender: PoliceData.gender,
-    // BranchName: PoliceData.BranchName,
+    PanCardNumber: 'BAJPC4350M',
+    AdharCard: '477064283031',
+    CheckNumber: '',
   });
 
   const [PanCardNumberError, setPanCardNumberError] = useState('');
   const [AdharCardError, setAdharCardError] = useState('');
-
   const [CheckNumberError, setCheckNumberError] = useState('');
   const [BranchNameError, setBranchNameError] = useState('');
   const [PanCardImage, setPanCardImage] = useState(false);
@@ -38,87 +37,74 @@ const RegistrationThree = ({navigation}) => {
   const [CheckimageURI, setCheckimageURI] = useState('');
   const [loading, setLoading] = useState(false);
   //post form data
-  //   const handleSubmitPress = async () => {
-  //     const regForBranchName = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  //     const regForPanCardNumberAndAdharCard = /^[A-Za-z]+$/;
-  //     if (userDetails.PanCardNumber === '') {
-  //       setPanCardNumberError('Please enter first name');
-  //     } else if (!regForPanCardNumberAndAdharCard.test(userDetails.PanCardNumber)) {
-  //       setPanCardNumberError('Invalid First Name');
-  //     } else if (userDetails.AdharCard === '') {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('Please enter last name');
-  //     } else if (
-  //       !regForPanCardNumberAndAdharCard.test(userDetails.AdharCard)
-  //     ) {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('Invalid Last Name');
-  //     } else if (userDetails.BranchName === '') {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('');
-  //       setBranchNameError('Please enter BranchName Id');
-  //     } else if (!regForBranchName.test(userDetails.BranchName)) {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('');
+  const handleSubmitPress = async () => {
+    const regForPanCard = /[A-Za-z]{5}\d{4}[A-Za-z]{1}$/;
+    const regForAdharCard =
+      /(^[0-9]{4}[0-9]{4}[0-9]{4}$)|(^[0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|(^[0-9]{4}-[0-9]{4}-[0-9]{4}$)/;
+    const regForCheque = '';
 
-  //       setBranchNameError('Invalid BranchName');
-  //     } else if (userDetails.YearOfBirth === '') {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('');
-
-  //       setBranchNameError('');
-  //     } else {
-  //       setPanCardNumberError('');
-  //       setAdharCardError('');
-
-  //       setBranchNameError('');
-
-  //       setLoading(true);
-  //       let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-  //       if (userData) {
-  //         const user = {
-  //           PanCardNumber: userDetails.PanCardNumber,
-  //           AdharCard: userDetails.AdharCard,
-  //           BranchName: userDetails.BranchName,
-
-  //           gender: userDetails.gender,
-  //           blood_group: userDetails.blood_group,
-  //           updatedBy: userDetails.updatedBy,
-  //           policeStationUserId: userDetails.policeStationUserId,
-  //           policeRole: userDetails.policeRole,
-  //           contactNo: userDetails.contactNo,
-  //         };
-  //         console.log('-------user---------', user);
-  //         await axios
-  //           .put(
-  //             'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-  //             user,
-  //             {
-  //               headers: {
-  //                 //Header Defination
-  //                 'Content-Type': 'application/json;charset=utf-8',
-  //               },
-  //             },
-  //           )
-  //           .then(response => {
-  //             console.log('--------response-edit profile -------', response.data);
-  //             // AsyncStorage.setItem('userData',response.data);
-  //             setLoading(false);
-  //             Snackbar.show({
-  //               text: 'Profile Updated Successfully',
-  //               duration: Snackbar.LENGTH_SHORT,
-  //               textColor: 'white',
-  //               backgroundColor: 'green',
-  //             });
-  //             navigation.reset({
-  //               index: 1,
-  //               routes: [{name: 'Profile'}],
-  //             });
-  //           })
-  //           .catch(error => {});
-  //       }
-  //     }
-  //   };
+    if (userDetails.PanCardNumber === '') {
+      setPanCardNumberError('Please enter pancard');
+    } else if (!regForPanCard.test(userDetails.PanCardNumber)) {
+      setPanCardNumberError('Invalid pan card number');
+    } else if (userDetails.AdharCard === '') {
+      setPanCardNumberError('');
+      setAdharCardError('Please enter adharcard number');
+    } else if (!regForAdharCard.test(userDetails.AdharCard)) {
+      setPanCardNumberError('');
+      setAdharCardError('Invalid adhar number');
+    } else if (userDetails.CheckNumber === '') {
+      setPanCardNumberError('');
+      setAdharCardError('');
+      setCheckNumberError('please enter Cheque  number');
+    }
+    //  else if (!regForCheque.test(userDetails.CheckNumber)) {
+    //   setPanCardNumberError('');
+    //   setAdharCardError('');
+    //   setCheckNumberError('invlaid Cheque number');
+    // }
+    else {
+      setPanCardNumberError('');
+      setAdharCardError('');
+      setCheckNumberError('');
+      alert('registred');
+      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
+      // if (userData) {
+      //   const user = {
+      //     PanCardNumber: userDetails.PanCardNumber,
+      //     AdharCard: userDetails.AdharCard,
+      //   };
+      //   console.log('-------user---------', user);
+      //   await axios
+      //     .put(
+      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
+      //       user,
+      //       {
+      //         headers: {
+      //           //Header Defination
+      //           'Content-Type': 'application/json;charset=utf-8',
+      //         },
+      //       },
+      //     )
+      //     .then(response => {
+      //       console.log('--------response-edit profile -------', response.data);
+      //       // AsyncStorage.setItem('userData',response.data);
+      //       setLoading(false);
+      //       Snackbar.show({
+      //         text: 'Profile Updated Successfully',
+      //         duration: Snackbar.LENGTH_SHORT,
+      //         textColor: 'white',
+      //         backgroundColor: 'green',
+      //       });
+      //       navigation.reset({
+      //         index: 1,
+      //         routes: [{name: 'Profile'}],
+      //       });
+      //     })
+      //     .catch(error => {});
+      // }
+    }
+  };
 
   return (
     <>
@@ -161,6 +147,11 @@ const RegistrationThree = ({navigation}) => {
               }
             />
           </View>
+          <View style={styles.carderror}>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+              {<Text>{PanCardNumberError}</Text>}
+            </Text>
+          </View>
           <View>
             <TouchableOpacity
               onPress={() => setPanCardImage(!PanCardImage)}
@@ -175,11 +166,6 @@ const RegistrationThree = ({navigation}) => {
                 Upload Pan Card
               </Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {<Text>{PanCardNumberError}</Text>}
-            </Text>
           </View>
 
           <View style={styles.cardOne}>
@@ -204,6 +190,11 @@ const RegistrationThree = ({navigation}) => {
               }
             />
           </View>
+          <View style={styles.carderror}>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+              {AdharCardError.length > 0 && <Text>{AdharCardError}</Text>}
+            </Text>
+          </View>
           <View>
             <TouchableOpacity
               onPress={() => setAdharCardImage(!AdharCardImage)}
@@ -218,11 +209,6 @@ const RegistrationThree = ({navigation}) => {
                 Upload Adhar Card
               </Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {AdharCardError.length > 0 && <Text>{AdharCardError}</Text>}
-            </Text>
           </View>
 
           <View style={styles.cardOne}>
@@ -247,6 +233,11 @@ const RegistrationThree = ({navigation}) => {
               }
             />
           </View>
+          <View style={styles.carderror}>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+              {CheckNumberError.length > 0 && <Text>{CheckNumberError}</Text>}
+            </Text>
+          </View>
           <View>
             <TouchableOpacity
               onPress={() => setCheckImage(!CheckImage)}
@@ -262,13 +253,12 @@ const RegistrationThree = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {CheckNumberError.length > 0 && <Text>{CheckNumberError}</Text>}
-            </Text>
-          </View>
 
-          <TouchableOpacity style={styles.cardButton}>
+          <TouchableOpacity
+            style={styles.cardButton}
+            onPress={() => {
+              handleSubmitPress();
+            }}>
             <Text
               style={{
                 margin: 10,
@@ -439,6 +429,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardButtonUpload: {
+    marginTop: 2,
     height: 'auto',
     elevation: 5,
     borderRadius: 25,

@@ -27,11 +27,11 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 const RegistrationTwo = ({navigation}) => {
   const [userDetails, setuserDetails] = useState({
-    BankName: 'BankName',
-    AccountNumber: 'AccountNumber',
+    BankName: '',
+    AccountNumber: '123456789012345678',
 
-    BranchName: 'BranchName',
-    IFSCCode: 'IFSCCode',
+    BranchName: '',
+    IFSCCode: 'SBIN0125',
   });
 
   const [BankNameError, setBankNameError] = useState('');
@@ -40,88 +40,91 @@ const RegistrationTwo = ({navigation}) => {
   const [IFSCCodeError, setIFSCCodeError] = useState('');
   const [BranchNameError, setBranchNameError] = useState('');
 
-  //post form data
-  //   const handleSubmitPress = async () => {
-  //     const regForBranchName = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  //     const regForBankNameAndAccountNumber = /^[A-Za-z]+$/;
-  //     if (userDetails.BankName === '') {
-  //       setBankNameError('Please enter first name');
-  //     } else if (!regForBankNameAndAccountNumber.test(userDetails.BankName)) {
-  //       setBankNameError('Invalid First Name');
-  //     } else if (userDetails.AccountNumber === '') {
-  //       setBankNameError('');
-  //       setAccountNumberError('Please enter last name');
-  //     } else if (
-  //       !regForBankNameAndAccountNumber.test(userDetails.AccountNumber)
-  //     ) {
-  //       setBankNameError('');
-  //       setAccountNumberError('Invalid Last Name');
-  //     } else if (userDetails.BranchName === '') {
-  //       setBankNameError('');
-  //       setAccountNumberError('');
-  //       setBranchNameError('Please enter BranchName Id');
-  //     } else if (!regForBranchName.test(userDetails.BranchName)) {
-  //       setBankNameError('');
-  //       setAccountNumberError('');
+  const handleSubmitPress = async () => {
+    const regForBankName = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    const regAccountNumber = /^\d{9,18}$/;
+    const regIFSC = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+    const regForBranchName = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    if (userDetails.BankName === '') {
+      setBankNameError('Please enter bank name');
+    } else if (!regForBankName.test(userDetails.BankName)) {
+      setBankNameError('Invalid Bank Name');
+    } else if (userDetails.AccountNumber === '') {
+      setBankNameError('');
+      setAccountNumberError('Please Enter Account Number');
+    } else if (!regAccountNumber.test(userDetails.AccountNumber)) {
+      setBankNameError('');
+      setAccountNumberError('Invalid Account Number');
+    } else if (userDetails.IFSCCode === '') {
+      setBankNameError('');
+      setAccountNumberError('');
+      setIFSCCodeError('Please enter IFSC Number');
+    } else if (!regIFSC.test(userDetails.IFSCCode)) {
+      setBankNameError('');
+      setAccountNumberError('');
+      setIFSCCodeError('Invalid IFSC Number');
+    } else if (userDetails.BranchName === '') {
+      setBankNameError('');
+      setAccountNumberError('');
+      setIFSCCodeError('');
+      setBranchNameError('Please enter branch name');
+    } else if (!regForBranchName.test(userDetails.BranchName)) {
+      setBankNameError('');
+      setAccountNumberError('');
+      setIFSCCodeError('');
+      setBranchNameError('Invalid branch name');
+    } else {
+      setBankNameError('');
+      setAccountNumberError('');
+      setIFSCCodeError('');
+      setBranchNameError('');
+      navigation.navigate('RegistrationThree');
+      // setLoading(true);
+      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
+      // if (userData) {
+      //   const user = {
+      //     BankName: userDetails.BankName,
+      //     AccountNumber: userDetails.AccountNumber,
+      //     BranchName: userDetails.BranchName,
 
-  //       setBranchNameError('Invalid BranchName');
-  //     } else if (userDetails.YearOfBirth === '') {
-  //       setBankNameError('');
-  //       setAccountNumberError('');
-
-  //       setBranchNameError('');
-  //     } else {
-  //       setBankNameError('');
-  //       setAccountNumberError('');
-
-  //       setBranchNameError('');
-
-  //       setLoading(true);
-  //       let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-  //       if (userData) {
-  //         const user = {
-  //           BankName: userDetails.BankName,
-  //           AccountNumber: userDetails.AccountNumber,
-  //           BranchName: userDetails.BranchName,
-
-  //           gender: userDetails.gender,
-  //           blood_group: userDetails.blood_group,
-  //           updatedBy: userDetails.updatedBy,
-  //           policeStationUserId: userDetails.policeStationUserId,
-  //           policeRole: userDetails.policeRole,
-  //           contactNo: userDetails.contactNo,
-  //         };
-  //         console.log('-------user---------', user);
-  //         await axios
-  //           .put(
-  //             'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-  //             user,
-  //             {
-  //               headers: {
-  //                 //Header Defination
-  //                 'Content-Type': 'application/json;charset=utf-8',
-  //               },
-  //             },
-  //           )
-  //           .then(response => {
-  //             console.log('--------response-edit profile -------', response.data);
-  //             // AsyncStorage.setItem('userData',response.data);
-  //             setLoading(false);
-  //             Snackbar.show({
-  //               text: 'Profile Updated Successfully',
-  //               duration: Snackbar.LENGTH_SHORT,
-  //               textColor: 'white',
-  //               backgroundColor: 'green',
-  //             });
-  //             navigation.reset({
-  //               index: 1,
-  //               routes: [{name: 'Profile'}],
-  //             });
-  //           })
-  //           .catch(error => {});
-  //       }
-  //     }
-  //   };
+      //     gender: userDetails.gender,
+      //     blood_group: userDetails.blood_group,
+      //     updatedBy: userDetails.updatedBy,
+      //     policeStationUserId: userDetails.policeStationUserId,
+      //     policeRole: userDetails.policeRole,
+      //     contactNo: userDetails.contactNo,
+      //   };
+      //   console.log('-------user---------', user);
+      //   await axios
+      //     .put(
+      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
+      //       user,
+      //       {
+      //         headers: {
+      //           //Header Defination
+      //           'Content-Type': 'application/json;charset=utf-8',
+      //         },
+      //       },
+      //     )
+      //     .then(response => {
+      //       console.log('--------response-edit profile -------', response.data);
+      //       // AsyncStorage.setItem('userData',response.data);
+      //       setLoading(false);
+      //       Snackbar.show({
+      //         text: 'Profile Updated Successfully',
+      //         duration: Snackbar.LENGTH_SHORT,
+      //         textColor: 'white',
+      //         backgroundColor: 'green',
+      //       });
+      //       navigation.reset({
+      //         index: 1,
+      //         routes: [{name: 'Profile'}],
+      //       });
+      //     })
+      //     .catch(error => {});
+      // }
+    }
+  };
 
   return (
     <>
@@ -263,7 +266,7 @@ const RegistrationTwo = ({navigation}) => {
           <TouchableOpacity
             style={styles.cardButton}
             onPress={() => {
-              navigation.navigate('RegistrationThree');
+              handleSubmitPress();
             }}>
             <Text
               style={{

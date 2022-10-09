@@ -29,17 +29,11 @@ const RegistrationOne = ({navigation}) => {
   //states for upload profile image
 
   const [userDetails, setuserDetails] = useState({
-    // firstname: PoliceData.firstName,
-    // lastName: PoliceData.lastName,
-    // gender: PoliceData.gender,
-    // emailId: PoliceData.emailId,
-    // blood_group: PoliceData.blood_group,
-    // rank: PoliceData.rank,
-    // status: PoliceData.status,
-    // unit: PoliceData.unit,
-    // updatedBy: PoliceData.updatedBy,
-    // policeStationUserId: PoliceData._id,
-    // policeRole: PoliceData.policeRole,
+    firstname: 'ddc',
+    lastName: 'adf',
+
+    emailId: 'avf@gmail.com',
+    mobileNumber: '1234567890',
   });
 
   const [firstnameError, setfirstnameError] = useState('');
@@ -53,88 +47,100 @@ const RegistrationOne = ({navigation}) => {
 
   //post form data
   const handleSubmitPress = async () => {
+    console.log(firstnameError, lastNameError, mobileNumberError, emailIdError);
+
+    const firstNamePattern = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    const lastNamePattern = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    const mobilePattern = /^([+]\d{2})?\d{10}$/;
     const regForemailId = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const regForfirstnameAndlastName = /^[A-Za-z]+$/;
+    // const regForfirstnameAndlastName = /^[A-Za-z]+$/;
     if (userDetails.firstname === '') {
       setfirstnameError('Please enter first name');
-    } else if (!regForfirstnameAndlastName.test(userDetails.firstname)) {
+    } else if (!firstNamePattern.test(userDetails.firstname)) {
       setfirstnameError('Invalid First Name');
     } else if (userDetails.lastName === '') {
       setfirstnameError('');
       setlastNameError('Please enter last name');
-    } else if (!regForfirstnameAndlastName.test(userDetails.lastName)) {
+    } else if (!lastNamePattern.test(userDetails.lastName)) {
       setfirstnameError('');
       setlastNameError('Invalid Last Name');
+    } else if (userDetails.mobileNumber === '') {
+      setfirstnameError('');
+      setlastNameError('');
+
+      setmobileNumberError('Please enter mobile number');
+    } else if (!mobilePattern.test(userDetails.mobileNumber)) {
+      setfirstnameError('');
+      setlastNameError('');
+
+      setmobileNumberError('Enter valid mobile Number');
     } else if (userDetails.emailId === '') {
       setfirstnameError('');
       setlastNameError('');
+      setmobileNumberError('');
       setemailIdError('Please enter emailId Id');
     } else if (!regForemailId.test(userDetails.emailId)) {
       setfirstnameError('');
+      setmobileNumberError('');
       setlastNameError('');
-
       setemailIdError('Invalid emailId');
-    } else if (userDetails.YearOfBirth === '') {
-      setfirstnameError('');
-      setlastNameError('');
-
-      setemailIdError('');
     } else {
       setfirstnameError('');
       setlastNameError('');
 
       setemailIdError('');
+      setmobileNumberError('');
+      navigation.navigate('RegistrationTwo');
+      // setLoading(true);
+      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
+      // if (userData) {
+      //   const user = {
+      //     firstName: userDetails.firstname,
+      //     lastName: userDetails.lastName,
+      //     emailId: userDetails.emailId,
 
-      setLoading(true);
-      let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-      if (userData) {
-        const user = {
-          firstName: userDetails.firstname,
-          lastName: userDetails.lastName,
-          emailId: userDetails.emailId,
-
-          gender: userDetails.gender,
-          blood_group: userDetails.blood_group,
-          updatedBy: userDetails.updatedBy,
-          policeStationUserId: userDetails.policeStationUserId,
-          policeRole: userDetails.policeRole,
-          contactNo: userDetails.contactNo,
-        };
-        console.log('-------user---------', user);
-        await axios
-          .put(
-            'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-            user,
-            {
-              headers: {
-                //Header Defination
-                'Content-Type': 'application/json;charset=utf-8',
-              },
-            },
-          )
-          .then(response => {
-            console.log('--------response-edit profile -------', response.data);
-            // AsyncStorage.setItem('userData',response.data);
-            setLoading(false);
-            Snackbar.show({
-              text: 'Profile Updated Successfully',
-              duration: Snackbar.LENGTH_SHORT,
-              textColor: 'white',
-              backgroundColor: 'green',
-            });
-            navigation.reset({
-              index: 1,
-              routes: [{name: 'Profile'}],
-            });
-          })
-          .catch(error => {});
-      }
+      //     gender: userDetails.gender,
+      //     blood_group: userDetails.blood_group,
+      //     updatedBy: userDetails.updatedBy,
+      //     policeStationUserId: userDetails.policeStationUserId,
+      //     policeRole: userDetails.policeRole,
+      //     contactNo: userDetails.contactNo,
+      //   };
+      //   console.log('-------user---------', user);
+      //   await axios
+      //     .put(
+      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
+      //       user,
+      //       {
+      //         headers: {
+      //           //Header Defination
+      //           'Content-Type': 'application/json;charset=utf-8',
+      //         },
+      //       },
+      //     )
+      //     .then(response => {
+      //       console.log('--------response-edit profile -------', response.data);
+      //       // AsyncStorage.setItem('userData',response.data);
+      //       setLoading(false);
+      //       Snackbar.show({
+      //         text: 'Profile Updated Successfully',
+      //         duration: Snackbar.LENGTH_SHORT,
+      //         textColor: 'white',
+      //         backgroundColor: 'green',
+      //       });
+      //       navigation.reset({
+      //         index: 1,
+      //         routes: [{name: 'Profile'}],
+      //       });
+      //     })
+      //     .catch(error => {});
+      // }
     }
   };
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  // if (loading) {
+  //   return <ActivityIndicator />;
+  // }
   return (
     <>
       <View style={styles.container}>
@@ -159,8 +165,8 @@ const RegistrationOne = ({navigation}) => {
             <TextInput
               style={{borderColor: '#fff', color: '#fff'}}
               value={userDetails.firstname}
-              onChangeText={first_name =>
-                setuserDetails({...userDetails, first_name})
+              onChangeText={firstname =>
+                setuserDetails({...userDetails, firstname})
               }
               mode="outlined"
               label="First Name"
@@ -206,7 +212,7 @@ const RegistrationOne = ({navigation}) => {
           </View>
           <View style={styles.carderror}>
             <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {lastNameError.length > 0 && <Text>{lastNameError}</Text>}
+              <Text>{lastNameError}</Text>
             </Text>
           </View>
 
@@ -299,7 +305,7 @@ const RegistrationOne = ({navigation}) => {
             style={styles.cardButton}
             // onPress={handleSubmitPress}
             onPress={() => {
-              navigation.navigate('RegistrationTwo');
+              handleSubmitPress();
             }}>
             <Text
               style={{

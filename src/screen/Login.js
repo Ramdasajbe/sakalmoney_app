@@ -29,7 +29,7 @@ const Login = ({navigation}) => {
 
   const handleSubmitPress = async () => {
     setErrortext('');
-
+    navigation.navigate('SideMenuStack');
     const mobilePattern = new RegExp(/^[0-9\b]+$/);
     if (!mobile) {
       setMobileError('Please Enter Mobile Number');
@@ -75,9 +75,9 @@ const Login = ({navigation}) => {
             //   textColor: 'white',
             //   backgroundColor: 'green',
             // });
-            let token = response.data.token;
-            let userData = response.data.user;
-            let policeUserData = response.data.policeuserData;
+            // let token = response.data.token;
+            // let userData = response.data.user;
+            // let policeUserData = response.data.policeuserData;
             // console.log('--token--',token);
             // console.log("--user data--",userData);
             // console.log('--police user data--', policeUserData);
@@ -219,7 +219,9 @@ const Login = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.cardButton}
-            onPress={() => navigation.navigate('SideMenuStack')}>
+            onPress={() => {
+              handleSubmitPress();
+            }}>
             <Text
               style={{
                 margin: 10,

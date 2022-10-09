@@ -25,6 +25,11 @@ const MainStack = () => {
         />
         <Stack.Screen
           options={{headerShown: false}}
+          name="Form"
+          component={Form}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
           name="Login"
           component={Login}
         />

@@ -11,6 +11,11 @@ import Form from '../screen/Form';
 import Login from '../screen/Login';
 import RegistrationOne from '../screen/RegistrationOne';
 import RegistrationTwo from '../screen/RegistrationTwo';
+import Logout from '../components/Logout';
+import StatusWindow from '../screen/StatusWindow';
+import List from '../components/List';
+import UserProfile from '../screen/UserProfile';
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -101,15 +106,26 @@ const NavigationDrawerStructure = props => {
 function SideMenuStack() {
   return (
     <Drawer.Navigator
-      drawerContentOptions={{
+      screenOptions={{
         activeTintColor: '#e91e63',
         itemStyle: {marginVertical: 5},
       }}>
       <Drawer.Screen
-        name="Form"
-        options={{drawerLabel: 'Second page Option'}}
-        component={Form}
+        name="List"
+        options={{drawerLabel: 'List'}}
+        component={List}
       />
+      <Drawer.Screen
+        name="Profile"
+        options={{drawerLabel: 'Profile'}}
+        component={UserProfile}
+      />
+
+      {/* <Drawer.Screen
+        name="Form"
+        options={{drawerLabel: 'Form'}}
+        component={Form}
+      /> */}
     </Drawer.Navigator>
   );
 }

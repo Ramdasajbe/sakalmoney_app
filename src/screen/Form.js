@@ -5,17 +5,17 @@
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
 // export default function App() {
-//   const [datePicker, setDatePicker] = useState(false);
+//   const [datepicker, setdatepicker] = useState(false);
 
 //   const [date, setDate] = useState(new Date());
 
-//   function showDatePicker() {
-//     setDatePicker(true);
+//   function showdatepicker() {
+//     setdatepicker(true);
 //   }
 
 //   function onDateSelected(event, value) {
 //     setDate(value);
-//     setDatePicker(false);
+//     setdatepicker(false);
 //   }
 
 //   return (
@@ -23,23 +23,23 @@
 //       <View style={styleSheet.MainContainer}>
 //         <Text style={styleSheet.text}>Date = {date.toDateString()}</Text>
 
-//         {datePicker && (
+//         {datepicker && (
 //           <DateTimePicker
 //             value={date}
 //             mode={'date'}
 //             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
 //             is24Hour={true}
 //             onChange={onDateSelected}
-//             style={styleSheet.datePicker}
+//             style={styleSheet.datepicker}
 //           />
 //         )}
 
-//         {!datePicker && (
+//         {!datepicker && (
 //           <View style={{margin: 10}}>
 //             <Button
 //               title="Show Date Picker"
 //               color="green"
-//               onPress={showDatePicker}
+//               onPress={showdatepicker}
 //             />
 //           </View>
 //         )}
@@ -65,7 +65,7 @@
 //   },
 
 //   // Style for iOS ONLY...
-//   datePicker: {
+//   datepicker: {
 //     justifyContent: 'center',
 //     alignItems: 'flex-start',
 //     width: 320,
@@ -99,11 +99,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 const Form = ({navigation}) => {
   //states for upload profile image
   const [Disbersment, setDisbersment] = useState(new Date());
+  const [sourcing, setsourcing] = useState(new Date());
   const [userDetails, setuserDetails] = useState({
+    // Disbersment: '',
+    // sourcing: '',
     // Date: Disbersment,
     // LoanAcNumber: PoliceData.LoanAcNumber,
     // CBSACNumber: PoliceData.CBSACNumber,
@@ -118,14 +121,22 @@ const Form = ({navigation}) => {
     // policeRole: PoliceData.policeRole,
   });
 
-  const [datePicker, setDatePicker] = useState(false);
+  const [SourceingdatePicker, setSourceingdatePicker] = useState(false);
+  const [DisbercementatePicker, setDisbercementatePicker] = useState(false);
+  function showSorcingdatepicker() {
+    setSourceingdatePicker(true);
+  }
 
-  function showDatePicker() {
-    setDatePicker(true);
+  function onDateSourcingSelected(event, value) {
+    setSourceingdatePicker(false);
+    setsourcing(value);
+  }
+  function showdatepicker() {
+    setDisbercementatePicker(true);
   }
 
   function onDateSelected(event, value) {
-    setDatePicker(false);
+    setDisbercementatePicker(false);
     setDisbersment(value);
   }
   const [LoanAcNumberError, setLoanAcNumberError] = useState('');
@@ -133,6 +144,7 @@ const Form = ({navigation}) => {
 
   const [Sourcing_DateError, setSourcing_DateError] = useState('');
   const [DateError, setDateError] = useState('');
+  const [SanctionLoanAmountError, setSanctionLoanAmountError] = useState();
 
   //post form data
   const handleSubmitPress = async () => {
@@ -225,7 +237,21 @@ const Form = ({navigation}) => {
         <ScrollView
           style={{paddingTop: 0}}
           keyboardShouldPersistTaps={'handled'}>
+          <View style={styles.header}>
+            <View style={styles.iconHeader}>
+              <IconHeader
+                onPress={() => navigation.goBack()}
+                name="angle-left"
+                size={30}
+                color="white"
+              />
+            </View>
+            {/* <Text style={styles.title1}>Registration</Text> */}
+          </View>
           <View style={styles.cardOne}>
+            <View style={styles.title}>
+              <Text style={styles.title1}>Form</Text>
+            </View>
             <TextInput
               style={{borderColor: '#fff', color: '#fff'}}
               value={userDetails.LoanAcNumber}
@@ -241,7 +267,9 @@ const Form = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <FontAwesome5 name="unlock-alt" size={20} />}
+                  name={() => (
+                    <MaterialCommunityIcons name="account-lock" size={25} />
+                  )}
                 />
               }
             />
@@ -269,7 +297,9 @@ const Form = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'user'} size={20} />}
+                  name={() => (
+                    <MaterialCommunityIcons name="account-lock" size={25} />
+                  )}
                 />
               }
             />
@@ -282,14 +312,42 @@ const Form = ({navigation}) => {
 
           <View style={styles.cardOne}>
             <TextInput
+              style={{borderColor: '#fff', color: '#fff'}}
               placeholderTextColor="#180A0A"
-              value={userDetails.Sourcing_Date}
-              onChangeText={Sourcing_Date =>
-                setuserDetails({...userDetails, Sourcing_Date})
+              value={userDetails.SanctionLoanAmount}
+              onChangeText={SanctionLoanAmount =>
+                setuserDetails({...userDetails, SanctionLoanAmount})
               }
               mode="outlined"
-              label="Sourceing Date"
-              placeholder="select Sourceing Date"
+              label="Enter Sanction Loan Amount "
+              returnKeyType="next"
+              onSubmitEditing={Keyboard.dismiss}
+              theme={{
+                colors: {primary: 'black', underlineColor: 'transparent'},
+              }}
+              left={
+                <TextInput.Icon
+                  name={() => <IconHeader name="money" size={25} />}
+                />
+              }
+            />
+          </View>
+          <View style={styles.carderror}>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+              <Text>{SanctionLoanAmountError}</Text>
+            </Text>
+          </View>
+
+          <View style={styles.cardOne}>
+            <TextInput
+              placeholderTextColor="#180A0A"
+              value={sourcing.toDateString()}
+              onChangeText={sourcing =>
+                setuserDetails({...userDetails, sourcing})
+              }
+              mode="outlined"
+              label="Disbercement Date"
+              placeholder="Select Disbercement Date"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -297,44 +355,39 @@ const Form = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => <Feather name={'user'} size={20} />}
+                  name={() => <Fontisto name={'date'} size={20} />}
                 />
               }
             />
           </View>
-          {/* {datePicker && (
+
+          {SourceingdatePicker && (
             <DateTimePicker
-              value={Disbersment}
+              value={sourcing}
               mode={'date'}
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               is24Hour={true}
-              onChange={onDateSelected}
-              style={StyleSheet.datePicker}
+              onChange={onDateSourcingSelected}
+              style={StyleSheet.datepicker}
             />
           )}
 
-          {!datePicker && (
+          {!SourceingdatePicker && (
             <View style={{margin: 10}}>
               <Button
-                title="Select disbersment date"
-                color="green"
-                onPress={showDatePicker}
+                title="Select sourcing date"
+                // color="#F7EE78"
+                onPress={showSorcingdatepicker}
               />
             </View>
-          )} */}
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {Sourcing_DateError.length > 0 && (
-                <Text>{Sourcing_DateError}</Text>
-              )}
-            </Text>
-          </View>
+          )}
+
           <View style={styles.cardOne}>
             <TextInput
               placeholderTextColor="#180A0A"
               value={Disbersment.toDateString()}
-              onChangeText={Sourcing =>
-                setuserDetails({...userDetails, Sourcing})
+              onChangeText={Disbersment =>
+                setuserDetails({...userDetails, Disbersment})
               }
               mode="outlined"
               label="Sourcing Date"
@@ -346,50 +399,37 @@ const Form = ({navigation}) => {
               }}
               left={
                 <TextInput.Icon
-                  name={() => (
-                    <MaterialCommunityIcons
-                      name="email-edit-outline"
-                      size={20}
-                    />
-                  )}
+                  name={() => <Fontisto name={'date'} size={20} />}
                 />
               }
             />
           </View>
 
-          {datePicker && (
+          {DisbercementatePicker && (
             <DateTimePicker
               value={Disbersment}
               mode={'date'}
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               is24Hour={true}
               onChange={onDateSelected}
-              style={StyleSheet.datePicker}
+              style={StyleSheet.datepicker}
             />
           )}
 
-          {!datePicker && (
+          {!DisbercementatePicker && (
             <View style={{margin: 10}}>
               <Button
-                title="Select disbersment date"
-                color="green"
-                onPress={showDatePicker}
+                title="Select disbercement date"
+                // color="#F7EE78"
+                onPress={showdatepicker}
               />
             </View>
           )}
 
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {DateError.length > 0 && <Text>{DateError}</Text>}
-            </Text>
-          </View>
-
           <TouchableOpacity
             style={styles.cardButton}
             // onPress={handleSubmitPress}
-            onPress={() => {
-              navigation.navigate('RegistrationTwo');
-            }}>
+          >
             <Text
               style={{
                 margin: 10,
@@ -397,7 +437,7 @@ const Form = ({navigation}) => {
                 fontWeight: 'bold',
                 fontSize: 20,
               }}>
-              Next
+              Submit
             </Text>
           </TouchableOpacity>
           <View style={{paddingTop: 40}}></View>
@@ -430,7 +470,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    marginBottom: 10,
+    marginBottom: 1,
   },
   footer: {
     flex: 1,
@@ -577,12 +617,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title1: {
-    color: 'white',
-    fontWeight: '400',
-    fontSize: 20,
+    color: 'black',
+    fontWeight: '800',
+    fontSize: 35,
     margin: 15,
   },
-
+  title: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   MainContainer: {
     flex: 1,
     padding: 6,
@@ -599,7 +643,7 @@ const styles = StyleSheet.create({
   },
 
   // Style for iOS ONLY...
-  datePicker: {
+  datepicker: {
     justifyContent: 'center',
     alignItems: 'flex-start',
     width: 320,
