@@ -11,17 +11,30 @@ import {
 } from 'react-native';
 
 import {TextInput} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
 import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
+import axios from 'axios';
 
-const RegistrationThree = ({navigation}) => {
+const RegistrationThree = ({route, navigation}) => {
+  const {
+    firstName,
+    lastName,
+    emailId,
+    mobileNumber,
+    BankName,
+    AccountNumber,
+    IFSCCode,
+    BranchName,
+  } = route.params;
+
   const [userDetails, setuserDetails] = useState({
-    PanCardNumber: 'BAJPC4350M',
-    AdharCard: '477064283031',
+    PanCardNumber: '',
+    AdharCard: '',
     CheckNumber: '',
   });
 
@@ -57,52 +70,63 @@ const RegistrationThree = ({navigation}) => {
       setPanCardNumberError('');
       setAdharCardError('');
       setCheckNumberError('please enter Cheque  number');
-    }
-    //  else if (!regForCheque.test(userDetails.CheckNumber)) {
-    //   setPanCardNumberError('');
-    //   setAdharCardError('');
-    //   setCheckNumberError('invlaid Cheque number');
-    // }
-    else {
+    } else {
       setPanCardNumberError('');
       setAdharCardError('');
       setCheckNumberError('');
       alert('registred');
-      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-      // if (userData) {
-      //   const user = {
-      //     PanCardNumber: userDetails.PanCardNumber,
-      //     AdharCard: userDetails.AdharCard,
-      //   };
-      //   console.log('-------user---------', user);
-      //   await axios
-      //     .put(
-      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-      //       user,
-      //       {
-      //         headers: {
-      //           //Header Defination
-      //           'Content-Type': 'application/json;charset=utf-8',
-      //         },
-      //       },
-      //     )
-      //     .then(response => {
-      //       console.log('--------response-edit profile -------', response.data);
-      //       // AsyncStorage.setItem('userData',response.data);
-      //       setLoading(false);
-      //       Snackbar.show({
-      //         text: 'Profile Updated Successfully',
-      //         duration: Snackbar.LENGTH_SHORT,
-      //         textColor: 'white',
-      //         backgroundColor: 'green',
-      //       });
-      //       navigation.reset({
-      //         index: 1,
-      //         routes: [{name: 'Profile'}],
-      //       });
-      //     })
-      //     .catch(error => {});
-      // }
+      const panNo = userDetails.PanCardNumber;
+      const adharNo = userDetails.AdharCard;
+      const panURL = PanCardimageURI;
+      const adharURL = AdharimageURI;
+      const cancelChequeurl = CheckimageURI;
+      const cancelChequeNo = userDetails.CheckNumber;
+      const user = {
+        firstName: firstName,
+        lastName: lastName,
+        emailId: emailId,
+        contactNo: mobileNumber,
+        bankName: BankName,
+        bankAcNo: AccountNumber,
+        IFSCCode: IFSCCode,
+        // BranchName,
+        panNo,
+        adharNo,
+        panURL,
+        adharURL,
+        cancelChequeNo,
+        cancelChequeurl,
+        isApproved: false,
+        createdBy: '632d7e9be5243ea1a82ab7ce',
+        hashedPassword: '123',
+      };
+
+      await axios
+        .post('http://43.204.38.56:4004/v1/user/usera', user, {
+          headers: {
+            //Header Defination
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+        })
+        .then(response => {
+          console.log(
+            '--------response-from-registered-user -------',
+            response.data,
+          );
+          // AsyncStorage.setItem('userData',response.data);
+          setLoading(false);
+          Snackbar.show({
+            text: 'User registered Successfully',
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+            backgroundColor: 'green',
+          });
+          navigation.reset({
+            index: 1,
+            routes: [{name: 'Login'}],
+          });
+        })
+        .catch(error => {});
     }
   };
 

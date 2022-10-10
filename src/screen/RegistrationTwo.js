@@ -25,13 +25,15 @@ import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-const RegistrationTwo = ({navigation}) => {
+const RegistrationTwo = ({route, navigation}) => {
+  const {firstName, lastName, emailId, mobileNumber} = route.params;
+
   const [userDetails, setuserDetails] = useState({
     BankName: '',
-    AccountNumber: '123456789012345678',
+    AccountNumber: '',
 
     BranchName: '',
-    IFSCCode: 'SBIN0125',
+    IFSCCode: '',
   });
 
   const [BankNameError, setBankNameError] = useState('');
@@ -78,51 +80,20 @@ const RegistrationTwo = ({navigation}) => {
       setAccountNumberError('');
       setIFSCCodeError('');
       setBranchNameError('');
-      navigation.navigate('RegistrationThree');
-      // setLoading(true);
-      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-      // if (userData) {
-      //   const user = {
-      //     BankName: userDetails.BankName,
-      //     AccountNumber: userDetails.AccountNumber,
-      //     BranchName: userDetails.BranchName,
-
-      //     gender: userDetails.gender,
-      //     blood_group: userDetails.blood_group,
-      //     updatedBy: userDetails.updatedBy,
-      //     policeStationUserId: userDetails.policeStationUserId,
-      //     policeRole: userDetails.policeRole,
-      //     contactNo: userDetails.contactNo,
-      //   };
-      //   console.log('-------user---------', user);
-      //   await axios
-      //     .put(
-      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-      //       user,
-      //       {
-      //         headers: {
-      //           //Header Defination
-      //           'Content-Type': 'application/json;charset=utf-8',
-      //         },
-      //       },
-      //     )
-      //     .then(response => {
-      //       console.log('--------response-edit profile -------', response.data);
-      //       // AsyncStorage.setItem('userData',response.data);
-      //       setLoading(false);
-      //       Snackbar.show({
-      //         text: 'Profile Updated Successfully',
-      //         duration: Snackbar.LENGTH_SHORT,
-      //         textColor: 'white',
-      //         backgroundColor: 'green',
-      //       });
-      //       navigation.reset({
-      //         index: 1,
-      //         routes: [{name: 'Profile'}],
-      //       });
-      //     })
-      //     .catch(error => {});
-      // }
+      const BankName = userDetails.BankName;
+      const AccountNumber = userDetails.AccountNumber;
+      const IFSCCode = userDetails.IFSCCode;
+      const BranchName = userDetails.BranchName;
+      navigation.navigate('RegistrationThree', {
+        firstName,
+        lastName,
+        emailId,
+        mobileNumber,
+        BankName,
+        AccountNumber,
+        IFSCCode,
+        BranchName,
+      });
     }
   };
 

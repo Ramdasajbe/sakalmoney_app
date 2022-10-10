@@ -12,11 +12,13 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/AntDesign';
+import {useDispatch} from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import {TextInput} from 'react-native-paper';
+import Snackbar from 'react-native-snackbar';
 const Login = ({navigation}) => {
+  const dispatch = useDispatch();
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ const Login = ({navigation}) => {
 
   const handleSubmitPress = async () => {
     setErrortext('');
-    navigation.navigate('SideMenuStack');
+
     const mobilePattern = new RegExp(/^[0-9\b]+$/);
     if (!mobile) {
       setMobileError('Please Enter Mobile Number');
@@ -43,72 +45,47 @@ const Login = ({navigation}) => {
     } else {
       setMobileError('');
       setPasswordError('');
+      // navigation.navigate('SideMenuStack');
       // setLoading(true);
       const user = {
-        mobile: mobile,
+        contact: mobile,
         password: password,
       };
 
       await axios
-        .post('https://server.sps.foxberry.link/v1/user/login', user, {
+        .post('http://43.204.38.56:4004/v1/user/login', user, {
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
           },
         })
         .then(response => {
-          // setLoading(false);
+          setLoading(false);
 
-          // if (response.status === 400) {
-          //     alert("Please enter correct credentials");
-          // } else
-          if (response.status === 200) {
+          if (response.status === 400) {
+            alert('Please enter correct credentials');
+          } else if (response.status === 200) {
             console.log('--response in login page--', response.data);
-            console.log(
-              '--response in login page for police data--',
-              response.data.policeuserData,
-            );
+            Snackbar.show({
+              text: 'Login Successfully',
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'white',
+              backgroundColor: 'green',
+            });
 
-            // alert('Login Successfully');
-            // Snackbar.show({
-            //   text: 'Login Successfully',
-            //   duration: 1,
-            //   textColor: 'white',
-            //   backgroundColor: 'green',
-            // });
-            // let token = response.data.token;
-            // let userData = response.data.user;
-            // let policeUserData = response.data.policeuserData;
-            // console.log('--token--',token);
-            // console.log("--user data--",userData);
-            // console.log('--police user data--', policeUserData);
-            // console.log('--police user data user id--', policeUserData.userId);
-            // console.log(
-            //   '--police user data user firstName--',
-            //   policeUserData.firstName,
-            // );
-            // console.log(
-            //   '--police user data user lastName--',
-            //   policeUserData.lastName,
-            // );
-            // console.log(
-            //   '--police user data policeStationUSerId--',
-            //   policeUserData._id,
-            // );
-
-            // navigation.reset({
-            //   index: 0,
-            //   routes: [{name: 'TrackmeListForPolice'}],
-            // });
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'SideMenuStack'}],
+            });
           }
         })
         .catch(error => {
-          // setLoading(false);
-          // Snackbar.show({
-          //   text: 'Please enter correct credentials',
-          //   duration: Snackbar.LENGTH_SHORT,
-          //   textColor: 'white',
-          //   backgroundColor: 'red',
-          // });
+          setLoading(false);
+          Snackbar.show({
+            text: 'Please enter correct credentials',
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+            backgroundColor: 'red',
+          });
         });
     }
   };

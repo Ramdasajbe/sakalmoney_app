@@ -7,9 +7,11 @@ import {
   Button,
 } from 'react-native';
 import React from 'react';
-// import {Button} from 'react-native-paper';
+
+import {useDispatch} from 'react-redux';
 
 const List = ({navigation}) => {
+  const disptach = useDispatch();
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -28,6 +30,7 @@ const List = ({navigation}) => {
             accessibilityLabel="Learn more about this purple button"
           />
         </View>
+        <View style={styles.container1}></View>
       </ScrollView>
     </View>
   );
@@ -54,5 +57,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#00618a',
     marginBottom: 10,
     fontFamily: 'Montserrat-Thin',
+  },
+  container1: {
+    paddingTop: 20,
+    paddingHorizontal: 30,
   },
 });

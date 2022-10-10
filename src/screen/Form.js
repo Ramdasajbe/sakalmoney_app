@@ -346,8 +346,8 @@ const Form = ({navigation}) => {
                 setuserDetails({...userDetails, sourcing})
               }
               mode="outlined"
-              label="Disbercement Date"
-              placeholder="Select Disbercement Date"
+              label="sourcing Date"
+              placeholder="Select sourcing Date"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -390,8 +390,8 @@ const Form = ({navigation}) => {
                 setuserDetails({...userDetails, Disbersment})
               }
               mode="outlined"
-              label="Sourcing Date"
-              placeholder="Select Sourcing Date"
+              label="Disbercement Date"
+              placeholder="Select Disbercement Date"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
               theme={{
@@ -648,6 +648,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     width: 320,
     height: 260,
+
     display: 'flex',
   },
 });

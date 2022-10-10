@@ -25,15 +25,18 @@ import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
+import {useDispatch} from 'react-redux';
+import {mainSlice} from '../Redux/Slice/Main';
 const RegistrationOne = ({navigation}) => {
   //states for upload profile image
 
   const [userDetails, setuserDetails] = useState({
-    firstname: 'ddc',
-    lastName: 'adf',
+    firstname: '',
+    lastName: '',
 
-    emailId: 'avf@gmail.com',
-    mobileNumber: '1234567890',
+    emailId: '',
+    mobileNumber: '',
+    profilePic: '',
   });
 
   const [firstnameError, setfirstnameError] = useState('');
@@ -41,10 +44,10 @@ const RegistrationOne = ({navigation}) => {
 
   const [mobileNumberError, setmobileNumberError] = useState('');
   const [emailIdError, setemailIdError] = useState('');
-  const [uploadImage, setUploadImage] = useState(false);
-  const [imageURI, setImageURI] = useState('');
+  // const [uploadImage, setUploadImage] = useState(false);
+  // const [imageURI, setImageURI] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
   //post form data
   const handleSubmitPress = async () => {
     console.log(firstnameError, lastNameError, mobileNumberError, emailIdError);
@@ -90,51 +93,18 @@ const RegistrationOne = ({navigation}) => {
 
       setemailIdError('');
       setmobileNumberError('');
-      navigation.navigate('RegistrationTwo');
-      // setLoading(true);
-      // let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-      // if (userData) {
-      //   const user = {
-      //     firstName: userDetails.firstname,
-      //     lastName: userDetails.lastName,
-      //     emailId: userDetails.emailId,
 
-      //     gender: userDetails.gender,
-      //     blood_group: userDetails.blood_group,
-      //     updatedBy: userDetails.updatedBy,
-      //     policeStationUserId: userDetails.policeStationUserId,
-      //     policeRole: userDetails.policeRole,
-      //     contactNo: userDetails.contactNo,
-      //   };
-      //   console.log('-------user---------', user);
-      //   await axios
-      //     .put(
-      //       'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-      //       user,
-      //       {
-      //         headers: {
-      //           //Header Defination
-      //           'Content-Type': 'application/json;charset=utf-8',
-      //         },
-      //       },
-      //     )
-      //     .then(response => {
-      //       console.log('--------response-edit profile -------', response.data);
-      //       // AsyncStorage.setItem('userData',response.data);
-      //       setLoading(false);
-      //       Snackbar.show({
-      //         text: 'Profile Updated Successfully',
-      //         duration: Snackbar.LENGTH_SHORT,
-      //         textColor: 'white',
-      //         backgroundColor: 'green',
-      //       });
-      //       navigation.reset({
-      //         index: 1,
-      //         routes: [{name: 'Profile'}],
-      //       });
-      //     })
-      //     .catch(error => {});
-      // }
+      const firstName = userDetails.firstname;
+      const lastName = userDetails.lastName;
+      const emailId = userDetails.emailId;
+      const mobileNumber = userDetails.mobileNumber;
+
+      navigation.navigate('RegistrationTwo', {
+        firstName,
+        lastName,
+        emailId,
+        mobileNumber,
+      });
     }
   };
 
@@ -276,7 +246,7 @@ const RegistrationOne = ({navigation}) => {
               {emailIdError.length > 0 && <Text>{emailIdError}</Text>}
             </Text>
           </View>
-          <View>
+          {/* <View>
             <TouchableOpacity
               onPress={() => setUploadImage(!uploadImage)}
               style={styles.cardButtonUpload}>
@@ -290,8 +260,8 @@ const RegistrationOne = ({navigation}) => {
                 Upload Profile Photo
               </Text>
             </TouchableOpacity>
-          </View>
-          <PickerImageSourceModal
+          </View> */}
+          {/* <PickerImageSourceModal
             source="adharCardImg"
             imageType="adharCardImage"
             show={uploadImage}
@@ -300,7 +270,7 @@ const RegistrationOne = ({navigation}) => {
               setLoading(_loadingState);
             }}
             setImage={returnImageUri => setImageURI(returnImageUri)}
-          />
+          /> */}
           <TouchableOpacity
             style={styles.cardButton}
             // onPress={handleSubmitPress}
