@@ -10,8 +10,7 @@ import {
   Alert,
 } from 'react-native';
 
-import {TextInput} from 'react-native-paper';
-import {useSelector} from 'react-redux';
+import {ActivityIndicator, TextInput} from 'react-native-paper';
 
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -51,10 +50,11 @@ const RegistrationThree = ({route, navigation}) => {
   const [loading, setLoading] = useState(false);
   //post form data
   const handleSubmitPress = async () => {
-    const regForPanCard = /[A-Za-z]{5}\d{4}[A-Za-z]{1}$/;
+    setLoading(true);
+    const regForPanCard = /[A-Z]{5}\d{4}[A-Z]{1}$/;
     const regForAdharCard =
       /(^[0-9]{4}[0-9]{4}[0-9]{4}$)|(^[0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|(^[0-9]{4}-[0-9]{4}-[0-9]{4}$)/;
-    const regForCheque = '';
+    const regForCheque = '/[0-9]$/';
 
     if (userDetails.PanCardNumber === '') {
       setPanCardNumberError('Please enter pancard');
@@ -70,6 +70,10 @@ const RegistrationThree = ({route, navigation}) => {
       setPanCardNumberError('');
       setAdharCardError('');
       setCheckNumberError('please enter Cheque  number');
+    } else if (!regForCheque.test(userDetails.CheckNumber)) {
+      setPanCardNumberError('');
+      setAdharCardError('');
+      setCheckNumberError('Invalid cheque number');
     } else {
       setPanCardNumberError('');
       setAdharCardError('');
@@ -109,11 +113,11 @@ const RegistrationThree = ({route, navigation}) => {
           },
         })
         .then(response => {
-          console.log(
-            '--------response-from-registered-user -------',
-            response.data,
-          );
-          // AsyncStorage.setItem('userData',response.data);
+          // console.log(
+          //   '--------response-from-registered-user -------',
+          //   response.data,
+          // );
+
           setLoading(false);
           Snackbar.show({
             text: 'User registered Successfully',
@@ -126,209 +130,230 @@ const RegistrationThree = ({route, navigation}) => {
             routes: [{name: 'Login'}],
           });
         })
-        .catch(error => {});
+        .catch(error => {
+          setLoading(false);
+          Snackbar.show({
+            text: 'Unable to register',
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+            backgroundColor: 'red',
+          });
+        });
     }
   };
 
   return (
     <>
-      <View style={styles.container}>
-        <ScrollView
-          style={{paddingTop: 0}}
-          keyboardShouldPersistTaps={'handled'}>
-          <View style={styles.header}>
-            <View style={styles.iconHeader}>
-              <IconHeader
-                onPress={() => navigation.goBack()}
-                name="angle-left"
-                size={30}
-                color="white"
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={60} />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <ScrollView
+            style={{paddingTop: 0}}
+            keyboardShouldPersistTaps={'handled'}>
+            <View style={styles.header}>
+              <View style={styles.iconHeader}>
+                <IconHeader
+                  onPress={() => navigation.goBack()}
+                  name="angle-left"
+                  size={30}
+                  color="white"
+                />
+              </View>
+              {/* <Text style={styles.title1}>Registration</Text> */}
+            </View>
+            <View style={styles.title}>
+              <Text style={styles.title1}>Registration Form</Text>
+            </View>
+            <View style={styles.cardOne}>
+              <TextInput
+                style={{borderColor: '#fff', color: '#fff'}}
+                value={userDetails.PanCardNumber}
+                onChangeText={PanCardNumber =>
+                  setuserDetails({...userDetails, PanCardNumber})
+                }
+                mode="outlined"
+                label="Pan Card Number"
+                placeholderTextColor="#180A0A"
+                returnKeyType="next"
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => <IconHeader name={'credit-card'} size={20} />}
+                  />
+                }
               />
             </View>
-            {/* <Text style={styles.title1}>Registration</Text> */}
-          </View>
-          <View style={styles.title}>
-            <Text style={styles.title1}>Registration Form</Text>
-          </View>
-          <View style={styles.cardOne}>
-            <TextInput
-              style={{borderColor: '#fff', color: '#fff'}}
-              value={userDetails.PanCardNumber}
-              onChangeText={PanCardNumber =>
-                setuserDetails({...userDetails, PanCardNumber})
-              }
-              mode="outlined"
-              label="Pan Card Number"
-              placeholderTextColor="#180A0A"
-              returnKeyType="next"
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name={'credit-card'} size={20} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {<Text>{PanCardNumberError}</Text>}
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => setPanCardImage(!PanCardImage)}
-              style={styles.cardButtonUpload}>
+            <View style={styles.carderror}>
               <Text
-                style={{
-                  margin: 10,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                }}>
-                Upload Pan Card
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                {<Text>{PanCardNumberError}</Text>}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => setPanCardImage(!PanCardImage)}
+                style={styles.cardButtonUpload}>
+                <Text
+                  style={{
+                    margin: 10,
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                  }}>
+                  Upload Pan Card
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.cardOne}>
-            <TextInput
-              style={{borderColor: '#fff', color: '#fff'}}
-              placeholderTextColor="#180A0A"
-              value={userDetails.AdharCard}
-              onChangeText={AdharCard =>
-                setuserDetails({...userDetails, AdharCard})
-              }
-              mode="outlined"
-              label="Adhar Card"
-              returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name={'vcard'} size={20} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {AdharCardError.length > 0 && <Text>{AdharCardError}</Text>}
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => setAdharCardImage(!AdharCardImage)}
-              style={styles.cardButtonUpload}>
+            <View style={styles.cardOne}>
+              <TextInput
+                style={{borderColor: '#fff', color: '#fff'}}
+                placeholderTextColor="#180A0A"
+                value={userDetails.AdharCard}
+                onChangeText={AdharCard =>
+                  setuserDetails({...userDetails, AdharCard})
+                }
+                mode="outlined"
+                label="Adhar Card"
+                returnKeyType="next"
+                onSubmitEditing={Keyboard.dismiss}
+                keyboardType={'number-pad'}
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => <IconHeader name={'vcard'} size={20} />}
+                  />
+                }
+              />
+            </View>
+            <View style={styles.carderror}>
               <Text
-                style={{
-                  margin: 10,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                }}>
-                Upload Adhar Card
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                {AdharCardError.length > 0 && <Text>{AdharCardError}</Text>}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => setAdharCardImage(!AdharCardImage)}
+                style={styles.cardButtonUpload}>
+                <Text
+                  style={{
+                    margin: 10,
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                  }}>
+                  Upload Adhar Card
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.cardOne}>
-            <TextInput
-              placeholderTextColor="#180A0A"
-              value={userDetails.CheckNumber}
-              onChangeText={CheckNumber =>
-                setuserDetails({...userDetails, CheckNumber})
-              }
-              mode="outlined"
-              label="Cheque Number"
-              placeholder="Enter Cheque Number"
-              onSubmitEditing={Keyboard.dismiss}
-              returnKeyType="next"
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name={'credit-card-alt'} size={20} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {CheckNumberError.length > 0 && <Text>{CheckNumberError}</Text>}
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => setCheckImage(!CheckImage)}
-              style={styles.cardButtonUpload}>
+            <View style={styles.cardOne}>
+              <TextInput
+                placeholderTextColor="#180A0A"
+                value={userDetails.CheckNumber}
+                onChangeText={CheckNumber =>
+                  setuserDetails({...userDetails, CheckNumber})
+                }
+                mode="outlined"
+                label="cancle Cheque Number"
+                placeholder="Enter cancle Cheque Number"
+                onSubmitEditing={Keyboard.dismiss}
+                returnKeyType="next"
+                keyboardType={'number-pad'}
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => (
+                      <IconHeader name={'credit-card-alt'} size={20} />
+                    )}
+                  />
+                }
+              />
+            </View>
+            <View style={styles.carderror}>
               <Text
-                style={{
-                  margin: 10,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                }}>
-                Upload Check
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                {CheckNumberError.length > 0 && <Text>{CheckNumberError}</Text>}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => setCheckImage(!CheckImage)}
+                style={styles.cardButtonUpload}>
+                <Text
+                  style={{
+                    margin: 10,
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                  }}>
+                  Upload Check
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity
-            style={styles.cardButton}
-            onPress={() => {
-              handleSubmitPress();
-            }}>
-            <Text
-              style={{
-                margin: 10,
-                color: 'white',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: 20,
+            <TouchableOpacity
+              style={styles.cardButton}
+              onPress={() => {
+                handleSubmitPress();
               }}>
-              Submit
-            </Text>
-          </TouchableOpacity>
-          <View style={{paddingTop: 40}}></View>
-        </ScrollView>
-        <PickerImageSourceModal
-          source="adharCardImg"
-          imageType="adharCardImage"
-          show={PanCardImage}
-          hide={() => setPanCardImage(!PanCardImage)}
-          loading={_loadingState => {
-            setLoading(_loadingState);
-          }}
-          setImage={returnImageUri => SetPanCardimageURI(returnImageUri)}
-        />
+              <Text
+                style={{
+                  margin: 10,
+                  color: 'white',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Submit
+              </Text>
+            </TouchableOpacity>
+            <View style={{paddingTop: 40}}></View>
+          </ScrollView>
+          <PickerImageSourceModal
+            source="adharCardImg"
+            imageType="adharCardImage"
+            show={PanCardImage}
+            hide={() => setPanCardImage(!PanCardImage)}
+            loading={_loadingState => {
+              setLoading(_loadingState);
+            }}
+            setImage={returnImageUri => SetPanCardimageURI(returnImageUri)}
+          />
 
-        <PickerImageSourceModal
-          source="adharCardImg"
-          imageType="adharCardImage"
-          show={AdharCardImage}
-          hide={() => setAdharCardImage(!AdharCardImage)}
-          loading={_loadingState => {
-            setLoading(_loadingState);
-          }}
-          setImage={returnImageUri => setAdharimageURI(returnImageUri)}
-        />
+          <PickerImageSourceModal
+            source="adharCardImg"
+            imageType="adharCardImage"
+            show={AdharCardImage}
+            hide={() => setAdharCardImage(!AdharCardImage)}
+            loading={_loadingState => {
+              setLoading(_loadingState);
+            }}
+            setImage={returnImageUri => setAdharimageURI(returnImageUri)}
+          />
 
-        <PickerImageSourceModal
-          source="adharCardImg"
-          imageType="adharCardImage"
-          show={CheckImage}
-          hide={() => setCheckImage(!CheckImage)}
-          loading={_loadingState => {
-            setLoading(_loadingState);
-          }}
-          setImage={returnImageUri => setCheckimageURI(returnImageUri)}
-        />
-      </View>
+          <PickerImageSourceModal
+            source="adharCardImg"
+            imageType="adharCardImage"
+            show={CheckImage}
+            hide={() => setCheckImage(!CheckImage)}
+            loading={_loadingState => {
+              setLoading(_loadingState);
+            }}
+            setImage={returnImageUri => setCheckimageURI(returnImageUri)}
+          />
+        </View>
+      )}
     </>
   );
 };

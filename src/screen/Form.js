@@ -1,79 +1,3 @@
-// import React, {useState} from 'react';
-
-// import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-
-// import DateTimePicker from '@react-native-community/datetimepicker';
-
-// export default function App() {
-//   const [datepicker, setdatepicker] = useState(false);
-
-//   const [date, setDate] = useState(new Date());
-
-//   function showdatepicker() {
-//     setdatepicker(true);
-//   }
-
-//   function onDateSelected(event, value) {
-//     setDate(value);
-//     setdatepicker(false);
-//   }
-
-//   return (
-//     <SafeAreaView style={{flex: 1}}>
-//       <View style={styleSheet.MainContainer}>
-//         <Text style={styleSheet.text}>Date = {date.toDateString()}</Text>
-
-//         {datepicker && (
-//           <DateTimePicker
-//             value={date}
-//             mode={'date'}
-//             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-//             is24Hour={true}
-//             onChange={onDateSelected}
-//             style={styleSheet.datepicker}
-//           />
-//         )}
-
-//         {!datepicker && (
-//           <View style={{margin: 10}}>
-//             <Button
-//               title="Show Date Picker"
-//               color="green"
-//               onPress={showdatepicker}
-//             />
-//           </View>
-//         )}
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styleSheet = StyleSheet.create({
-//   MainContainer: {
-//     flex: 1,
-//     padding: 6,
-//     alignItems: 'center',
-//     backgroundColor: 'white',
-//   },
-
-//   text: {
-//     fontSize: 25,
-//     color: 'red',
-//     padding: 3,
-//     marginBottom: 10,
-//     textAlign: 'center',
-//   },
-
-//   // Style for iOS ONLY...
-//   datepicker: {
-//     justifyContent: 'center',
-//     alignItems: 'flex-start',
-//     width: 320,
-//     height: 260,
-//     display: 'flex',
-//   },
-// });
-
 import React, {useState, useEffect} from 'react';
 
 import {
@@ -100,10 +24,36 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Snackbar from 'react-native-snackbar';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import {Picker} from '@react-native-picker/picker';
+import {useRef} from 'react';
 const Form = ({navigation}) => {
+  const [filetype, setfiletype] = useState();
+  const [bankvalue, setbankvalue] = useState('');
+  const [branch, setbranch] = useState();
+  const [LoanAcNumberError, setLoanAcNumberError] = useState('');
+  const [CBSACNumberError, setCBSACNumberError] = useState('');
+  const [SourceingdatePicker, setSourceingdatePicker] = useState(false);
+  const [DisbercementatePicker, setDisbercementatePicker] = useState(false);
+  // console.log('-----branch----', branch);
+  const [Sourcing_DateError, setSourcing_DateError] = useState('');
+  const [DateError, setDateError] = useState('');
+  const [SanctionLoanAmountError, setSanctionLoanAmountError] = useState();
+  const [Allbanklist, setAllbanklist] = useState();
+  const [Allbranchlist, setAllbranchlist] = useState([]);
+  const [loading, setloading] = useState();
+  const pickerRef = useRef();
+
+  function open() {
+    pickerRef.current.focus();
+  }
+
+  function close() {
+    pickerRef.current.blur();
+  }
   //states for upload profile image
   const [Disbersment, setDisbersment] = useState(new Date());
   const [sourcing, setsourcing] = useState(new Date());
+  const [bank_id, setbank_id] = useState();
   const [userDetails, setuserDetails] = useState({
     // Disbersment: '',
     // sourcing: '',
@@ -121,8 +71,6 @@ const Form = ({navigation}) => {
     // policeRole: PoliceData.policeRole,
   });
 
-  const [SourceingdatePicker, setSourceingdatePicker] = useState(false);
-  const [DisbercementatePicker, setDisbercementatePicker] = useState(false);
   function showSorcingdatepicker() {
     setSourceingdatePicker(true);
   }
@@ -139,310 +87,408 @@ const Form = ({navigation}) => {
     setDisbercementatePicker(false);
     setDisbersment(value);
   }
-  const [LoanAcNumberError, setLoanAcNumberError] = useState('');
-  const [CBSACNumberError, setCBSACNumberError] = useState('');
 
-  const [Sourcing_DateError, setSourcing_DateError] = useState('');
-  const [DateError, setDateError] = useState('');
-  const [SanctionLoanAmountError, setSanctionLoanAmountError] = useState();
-
+  useEffect(() => {
+    getAllBank();
+  }, []);
+  useEffect(() => {
+    if (bankvalue) {
+      getAllBranch();
+    }
+  }, [bankvalue]);
   //post form data
+  const getAllBank = async () => {
+    await axios
+      .get('http://43.204.38.56:4004/v1/bank/getbanklist')
+      .then(responce => {
+        // console.log('-----all bank----', responce.data);
+        setAllbanklist(responce.data);
+        setAllbranchlist('No data found');
+      });
+  };
+  const getAllBranch = async () => {
+    if (bank_id) {
+      await axios
+        .post('http://43.204.38.56:4004/v1/bankbranch/getbankbranchlist', {
+          bank_id,
+        })
+        .then(response => {
+          // Allbranchlist(response.data);
+          setAllbranchlist(response.data);
+          // console.log('--------response-branches-------', response.data);
+        })
+        .catch(error => {
+          console.log('--------response-branches-error-------', error);
+        });
+    }
+  };
+
   const handleSubmitPress = async () => {
+    setloading(true);
     const regForDate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     const regForLoanAcNumberAndCBSACNumber = /^[A-Za-z]+$/;
-    if (userDetails.LoanAcNumber === '') {
-      setLoanAcNumberError('Please enter first name');
-    } else if (
-      !regForLoanAcNumberAndCBSACNumber.test(userDetails.LoanAcNumber)
-    ) {
-      setLoanAcNumberError('Invalid First Name');
-    } else if (userDetails.CBSACNumber === '') {
-      setLoanAcNumberError('');
-      setCBSACNumberError('Please enter last name');
-    } else if (
-      !regForLoanAcNumberAndCBSACNumber.test(userDetails.CBSACNumber)
-    ) {
-      setLoanAcNumberError('');
-      setCBSACNumberError('Invalid Last Name');
-    } else if (userDetails.Date === '') {
-      setLoanAcNumberError('');
-      setCBSACNumberError('');
-      setDateError('Please enter Date Id');
-    } else if (!regForDate.test(userDetails.Date)) {
-      setLoanAcNumberError('');
-      setCBSACNumberError('');
+    // if (userDetails.LoanAcNumber === '') {
+    //   setLoanAcNumberError('Please enter first name');
+    // } else if (
+    //   !regForLoanAcNumberAndCBSACNumber.test(userDetails.LoanAcNumber)
+    // ) {
+    //   setLoanAcNumberError('Invalid First Name');
+    // } else if (userDetails.CBSACNumber === '') {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('Please enter last name');
+    // } else if (
+    //   !regForLoanAcNumberAndCBSACNumber.test(userDetails.CBSACNumber)
+    // ) {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('Invalid Last Name');
+    // } else if (userDetails.Date === '') {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('');
+    //   setDateError('Please enter Date Id');
+    // } else if (!regForDate.test(userDetails.Date)) {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('');
 
-      setDateError('Invalid Date');
-    } else if (userDetails.YearOfBirth === '') {
-      setLoanAcNumberError('');
-      setCBSACNumberError('');
+    //   setDateError('Invalid Date');
+    // } else if (userDetails.YearOfBirth === '') {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('');
 
-      setDateError('');
-    } else {
-      setLoanAcNumberError('');
-      setCBSACNumberError('');
+    //   setDateError('');
+    // } else {
+    //   setLoanAcNumberError('');
+    //   setCBSACNumberError('');
 
-      setDateError('');
+    //   setDateError('');
 
-      setLoading(true);
-      let userData = JSON.parse(await AsyncStorage.getItem('userData'));
-      if (userData) {
-        const user = {
-          LoanAcNumber: userDetails.LoanAcNumber,
-          CBSACNumber: userDetails.CBSACNumber,
-          Date: userDetails.Date,
+    const bankName = branch?.bankName;
+    const barachName = branch?.barachName;
+    const branch_id = branch?._id;
+    const code = branch?.code;
+    const fileType = filetype;
+    const nameOfCustomer = 'test';
+    const sourcingDate = sourcing.toDateString();
+    const disbDate = Disbersment.toDateString();
+    const sanctionedLoanAmt = userDetails?.SanctionLoanAmount;
+    const CBSAcNo = userDetails?.CBSACNumber;
+    const LOSId = userDetails.LoanAcNumber;
 
-          gender: userDetails.gender,
-          blood_group: userDetails.blood_group,
-          updatedBy: userDetails.updatedBy,
-          policeStationUserId: userDetails.policeStationUserId,
-          policeRole: userDetails.policeRole,
-          contactNo: userDetails.contactNo,
-        };
-        console.log('-------user---------', user);
-        await axios
-          .put(
-            'https://server.sps.foxberry.link/v1/policestationuser/updatepolicestationuser',
-            user,
-            {
-              headers: {
-                //Header Defination
-                'Content-Type': 'application/json;charset=utf-8',
-              },
-            },
-          )
-          .then(response => {
-            console.log('--------response-edit profile -------', response.data);
-            // AsyncStorage.setItem('userData',response.data);
-            setLoading(false);
-            Snackbar.show({
-              text: 'Profile Updated Successfully',
-              duration: Snackbar.LENGTH_SHORT,
-              textColor: 'white',
-              backgroundColor: 'green',
-            });
-            navigation.reset({
-              index: 1,
-              routes: [{name: 'Profile'}],
-            });
-          })
-          .catch(error => {});
-      }
-    }
+    const user = {
+      agent_id: '6343c03016c7b447a82a33be',
+      agentName: 'Test',
+      agentContactNo: '1234512345',
+      agentId: '1234567901',
+      LOSId,
+      bankName,
+      barachName,
+      branch_id,
+      fileType,
+      sourcingDate,
+      disbDate,
+      sanctionedLoanAmt,
+      code,
+      nameOfCustomer,
+      CBSAcNo,
+    };
+
+    await axios
+      .post('https://sakalmoneyapp.foxberry.link/v1/loan/addloan', user)
+      .then(response => {
+        if (response.status == 200) {
+          setloading(false);
+          console.log('----responce from add loan----', response.data);
+
+          Snackbar.show({
+            text: 'form submitted successfully',
+            duration: Snackbar.LENGTH_SHORT,
+            textColor: 'white',
+            backgroundColor: 'green',
+          });
+          navigation.navigate('List');
+        }
+      })
+      .catch(error => {
+        setloading(false);
+        console.log('----responce from error in add loan---', error);
+        Snackbar.show({
+          text: 'Please enter correct credentials',
+          duration: Snackbar.LENGTH_SHORT,
+          textColor: 'white',
+          backgroundColor: 'red',
+        });
+      });
+    // }
   };
 
   return (
     <>
-      <View style={styles.container}>
-        <ScrollView
-          style={{paddingTop: 0}}
-          keyboardShouldPersistTaps={'handled'}>
-          <View style={styles.header}>
-            <View style={styles.iconHeader}>
-              <IconHeader
-                onPress={() => navigation.goBack()}
-                name="angle-left"
-                size={30}
-                color="white"
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={60} />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <ScrollView
+            style={{paddingTop: 0}}
+            keyboardShouldPersistTaps={'handled'}>
+            <View style={styles.header}>
+              <View style={styles.iconHeader}>
+                <IconHeader
+                  onPress={() => navigation.goBack()}
+                  name="angle-left"
+                  size={30}
+                  color="white"
+                />
+              </View>
+              {/* <Text style={styles.title1}>Registration</Text> */}
+            </View>
+
+            <View style={styles.cardOne}>
+              <View style={styles.title}>
+                <Text style={styles.title1}>Form</Text>
+              </View>
+              <View style={styles.cardOne}>
+                <Picker
+                  onValueChange={itemValue => {
+                    setbankvalue(itemValue), setbank_id(itemValue._id);
+                  }}
+                  selectedValue={bankvalue}>
+                  <Picker.Item label="-Select Bank" value="0"></Picker.Item>
+                  {Allbanklist &&
+                    Allbanklist?.map(option => {
+                      return (
+                        <Picker.Item
+                          label={option?.bankName}
+                          key={option._id}
+                          value={option}></Picker.Item>
+                      );
+                    })}
+                </Picker>
+              </View>
+
+              <View style={styles.cardOne}>
+                <Picker
+                  selectedValue={branch}
+                  onValueChange={itemValue => setbranch(itemValue)}>
+                  <Picker.Item label="-Select Branch" value="0"></Picker.Item>
+                  {Allbranchlist != 'No data found' &&
+                    Allbranchlist?.map(option => {
+                      return (
+                        <Picker.Item
+                          key={option?.bank_id}
+                          label={option?.barachName}
+                          value={option}></Picker.Item>
+                      );
+                    })}
+                </Picker>
+              </View>
+              <TextInput
+                style={{borderColor: '#fff', color: '#fff'}}
+                value={userDetails.LoanAcNumber}
+                onChangeText={LoanAcNumber =>
+                  setuserDetails({...userDetails, LoanAcNumber})
+                }
+                mode="outlined"
+                label="Loan A.C. Number"
+                placeholderTextColor="#180A0A"
+                returnKeyType="next"
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => (
+                      <MaterialCommunityIcons name="account-lock" size={25} />
+                    )}
+                  />
+                }
               />
             </View>
-            {/* <Text style={styles.title1}>Registration</Text> */}
-          </View>
-          <View style={styles.cardOne}>
-            <View style={styles.title}>
-              <Text style={styles.title1}>Form</Text>
+            <View style={styles.carderror}>
+              <Text
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                {<Text>{LoanAcNumberError}</Text>}
+              </Text>
             </View>
-            <TextInput
-              style={{borderColor: '#fff', color: '#fff'}}
-              value={userDetails.LoanAcNumber}
-              onChangeText={LoanAcNumber =>
-                setuserDetails({...userDetails, LoanAcNumber})
-              }
-              mode="outlined"
-              label="Loan A.C. Number"
-              placeholderTextColor="#180A0A"
-              returnKeyType="next"
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => (
-                    <MaterialCommunityIcons name="account-lock" size={25} />
-                  )}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {<Text>{LoanAcNumberError}</Text>}
-            </Text>
-          </View>
 
-          <View style={styles.cardOne}>
-            <TextInput
-              style={{borderColor: '#fff', color: '#fff'}}
-              placeholderTextColor="#180A0A"
-              value={userDetails.CBSACNumber}
-              onChangeText={CBSACNumber =>
-                setuserDetails({...userDetails, CBSACNumber})
-              }
-              mode="outlined"
-              label="CBS A.C. Number"
-              returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => (
-                    <MaterialCommunityIcons name="account-lock" size={25} />
-                  )}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {CBSACNumberError.length > 0 && <Text>{CBSACNumberError}</Text>}
-            </Text>
-          </View>
-
-          <View style={styles.cardOne}>
-            <TextInput
-              style={{borderColor: '#fff', color: '#fff'}}
-              placeholderTextColor="#180A0A"
-              value={userDetails.SanctionLoanAmount}
-              onChangeText={SanctionLoanAmount =>
-                setuserDetails({...userDetails, SanctionLoanAmount})
-              }
-              mode="outlined"
-              label="Enter Sanction Loan Amount "
-              returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name="money" size={25} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              <Text>{SanctionLoanAmountError}</Text>
-            </Text>
-          </View>
-
-          <View style={styles.cardOne}>
-            <TextInput
-              placeholderTextColor="#180A0A"
-              value={sourcing.toDateString()}
-              onChangeText={sourcing =>
-                setuserDetails({...userDetails, sourcing})
-              }
-              mode="outlined"
-              label="sourcing Date"
-              placeholder="Select sourcing Date"
-              onSubmitEditing={Keyboard.dismiss}
-              returnKeyType="next"
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <Fontisto name={'date'} size={20} />}
-                />
-              }
-            />
-          </View>
-
-          {SourceingdatePicker && (
-            <DateTimePicker
-              value={sourcing}
-              mode={'date'}
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              is24Hour={true}
-              onChange={onDateSourcingSelected}
-              style={StyleSheet.datepicker}
-            />
-          )}
-
-          {!SourceingdatePicker && (
-            <View style={{margin: 10}}>
-              <Button
-                title="Select sourcing date"
-                // color="#F7EE78"
-                onPress={showSorcingdatepicker}
+            <View style={styles.cardOne}>
+              <TextInput
+                style={{borderColor: '#fff', color: '#fff'}}
+                placeholderTextColor="#180A0A"
+                value={userDetails.CBSACNumber}
+                onChangeText={CBSACNumber =>
+                  setuserDetails({...userDetails, CBSACNumber})
+                }
+                mode="outlined"
+                label="CBS A.C. Number"
+                returnKeyType="next"
+                onSubmitEditing={Keyboard.dismiss}
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => (
+                      <MaterialCommunityIcons name="account-lock" size={25} />
+                    )}
+                  />
+                }
               />
             </View>
-          )}
+            <View style={styles.carderror}>
+              <Text
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                {CBSACNumberError.length > 0 && <Text>{CBSACNumberError}</Text>}
+              </Text>
+            </View>
 
-          <View style={styles.cardOne}>
-            <TextInput
-              placeholderTextColor="#180A0A"
-              value={Disbersment.toDateString()}
-              onChangeText={Disbersment =>
-                setuserDetails({...userDetails, Disbersment})
-              }
-              mode="outlined"
-              label="Disbercement Date"
-              placeholder="Select Disbercement Date"
-              onSubmitEditing={Keyboard.dismiss}
-              returnKeyType="next"
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <Fontisto name={'date'} size={20} />}
-                />
-              }
-            />
-          </View>
-
-          {DisbercementatePicker && (
-            <DateTimePicker
-              value={Disbersment}
-              mode={'date'}
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              is24Hour={true}
-              onChange={onDateSelected}
-              style={StyleSheet.datepicker}
-            />
-          )}
-
-          {!DisbercementatePicker && (
-            <View style={{margin: 10}}>
-              <Button
-                title="Select disbercement date"
-                // color="#F7EE78"
-                onPress={showdatepicker}
+            <View style={styles.cardOne}>
+              <TextInput
+                style={{borderColor: '#fff', color: '#fff'}}
+                placeholderTextColor="#180A0A"
+                value={userDetails.SanctionLoanAmount}
+                onChangeText={SanctionLoanAmount =>
+                  setuserDetails({...userDetails, SanctionLoanAmount})
+                }
+                mode="outlined"
+                label="Enter Sanction Loan Amount "
+                returnKeyType="next"
+                onSubmitEditing={Keyboard.dismiss}
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => <IconHeader name="money" size={25} />}
+                  />
+                }
               />
             </View>
-          )}
+            <View style={styles.carderror}>
+              <Text
+                style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
+                <Text>{SanctionLoanAmountError}</Text>
+              </Text>
+            </View>
+            <View style={styles.cardOne}>
+              <Picker
+                onValueChange={itemValue => setfiletype(itemValue)}
+                selectedValue={filetype}>
+                <Picker.Item label="-Select fileType-" value="0"></Picker.Item>
+                <Picker.Item
+                  label="RINNRAKSHA"
+                  value="RINNRAKSHA"></Picker.Item>
+                <Picker.Item label="TAKEOVER" value="TAKEOVER"></Picker.Item>
+                <Picker.Item label="TOPUP" value="TOPUP"></Picker.Item>
+                <Picker.Item label="NEW " value="NEW "></Picker.Item>
+                <Picker.Item label="Resale " value="Resale"></Picker.Item>
+              </Picker>
+            </View>
+            <View style={styles.cardOne}>
+              <TextInput
+                placeholderTextColor="#180A0A"
+                value={sourcing.toDateString()}
+                onChangeText={sourcing =>
+                  setuserDetails({...userDetails, sourcing})
+                }
+                mode="outlined"
+                label="sourcing Date"
+                placeholder="Select sourcing Date"
+                onSubmitEditing={Keyboard.dismiss}
+                returnKeyType="next"
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => <Fontisto name={'date'} size={20} />}
+                  />
+                }
+              />
+            </View>
 
-          <TouchableOpacity
-            style={styles.cardButton}
-            // onPress={handleSubmitPress}
-          >
-            <Text
-              style={{
-                margin: 10,
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: 20,
-              }}>
-              Submit
-            </Text>
-          </TouchableOpacity>
-          <View style={{paddingTop: 40}}></View>
-        </ScrollView>
-      </View>
+            {SourceingdatePicker && (
+              <DateTimePicker
+                value={sourcing}
+                mode={'date'}
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                is24Hour={true}
+                onChange={onDateSourcingSelected}
+                style={StyleSheet.datepicker}
+              />
+            )}
+
+            {!SourceingdatePicker && (
+              <View style={{margin: 10}}>
+                <Button
+                  title="Select sourcing date"
+                  // color="#F7EE78"
+                  onPress={showSorcingdatepicker}
+                />
+              </View>
+            )}
+
+            <View style={styles.cardOne}>
+              <TextInput
+                placeholderTextColor="#180A0A"
+                value={Disbersment.toDateString()}
+                onChangeText={Disbersment =>
+                  setuserDetails({...userDetails, Disbersment})
+                }
+                mode="outlined"
+                label="Disbercement Date"
+                placeholder="Select Disbercement Date"
+                onSubmitEditing={Keyboard.dismiss}
+                returnKeyType="next"
+                theme={{
+                  colors: {primary: 'black', underlineColor: 'transparent'},
+                }}
+                left={
+                  <TextInput.Icon
+                    name={() => <Fontisto name={'date'} size={20} />}
+                  />
+                }
+              />
+            </View>
+
+            {DisbercementatePicker && (
+              <DateTimePicker
+                value={Disbersment}
+                mode={'date'}
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                is24Hour={true}
+                onChange={onDateSelected}
+                style={StyleSheet.datepicker}
+              />
+            )}
+
+            {!DisbercementatePicker && (
+              <View style={{margin: 10}}>
+                <Button
+                  title="Select disbercement date"
+                  // color="#F7EE78"
+                  onPress={showdatepicker}
+                />
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.cardButton}
+              onPress={handleSubmitPress}>
+              <Text
+                style={{
+                  margin: 10,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                }}>
+                Submit
+              </Text>
+            </TouchableOpacity>
+            <View style={{paddingTop: 40}}></View>
+          </ScrollView>
+        </View>
+      )}
     </>
   );
 };

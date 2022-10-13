@@ -8,7 +8,7 @@ export const LoginAction = createAsyncThunk('loginActionLoding', content =>
         'Content-Type': 'application/json;charset=utf-8',
       },
     })
-    .then(response => response)
+    .then(response => response.data)
     .catch(error => error),
 );
 

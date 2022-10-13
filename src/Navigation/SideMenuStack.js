@@ -15,6 +15,9 @@ import Logout from '../components/Logout';
 import StatusWindow from '../screen/StatusWindow';
 import List from '../components/List';
 import UserProfile from '../screen/UserProfile';
+import DashboardScreen from '../screen/DashboardScreen';
+import Home from '../screen/Home';
+import BottamStack from './BottamStack';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -111,21 +114,15 @@ function SideMenuStack() {
         itemStyle: {marginVertical: 5},
       }}>
       <Drawer.Screen
-        name="List"
-        options={{drawerLabel: 'List'}}
-        component={List}
+        name="Home"
+        options={{drawerLabel: 'Home'}}
+        component={BottamStack}
       />
       <Drawer.Screen
         name="Profile"
         options={{drawerLabel: 'Profile'}}
         component={UserProfile}
       />
-
-      {/* <Drawer.Screen
-        name="Form"
-        options={{drawerLabel: 'Form'}}
-        component={Form}
-      /> */}
     </Drawer.Navigator>
   );
 }

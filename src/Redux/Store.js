@@ -1,22 +1,14 @@
-// import storage from 'redux-persist/lib/storage';
-import {combineReducers} from 'redux';
-import {persistReducer} from 'redux-persist';
 import {configureStore} from '@reduxjs/toolkit';
-import mainSlice from './Slice/Main';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-const reducers = combineReducers({
-  counter: mainSlice,
-});
-const persistConfig = {
-  key: 'root',
-  storage: AsyncStorage,
-};
-const persistedReducer = persistReducer(persistConfig, reducers);
-const store = configureStore({
-  reducer: persistedReducer,
-
-  middleware: [],
+import allreducer from '../Redux/Reducer/index';
+import {setupListeners} from '@reduxjs/toolkit/query';
+export const store = configureStore({
+  reducer: {
+    SakalMoney: allreducer,
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
-export default store;
+setupListeners(store.dispatch);

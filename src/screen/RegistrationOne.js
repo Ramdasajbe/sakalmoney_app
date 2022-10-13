@@ -25,7 +25,7 @@ import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
-import {useDispatch} from 'react-redux';
+
 import {mainSlice} from '../Redux/Slice/Main';
 const RegistrationOne = ({navigation}) => {
   //states for upload profile image
@@ -47,13 +47,13 @@ const RegistrationOne = ({navigation}) => {
   // const [uploadImage, setUploadImage] = useState(false);
   // const [imageURI, setImageURI] = useState('');
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+
   //post form data
   const handleSubmitPress = async () => {
     console.log(firstnameError, lastNameError, mobileNumberError, emailIdError);
 
-    const firstNamePattern = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
-    const lastNamePattern = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    const firstNamePattern = /[a-zA-Z][a-zA-Z .,'-]*$/;
+    const lastNamePattern = /[0-9a-zA-Z][a-zA-Z .,'-]*$/;
     const mobilePattern = /^([+]\d{2})?\d{10}$/;
     const regForemailId = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     // const regForfirstnameAndlastName = /^[A-Za-z]+$/;
@@ -142,6 +142,7 @@ const RegistrationOne = ({navigation}) => {
               label="First Name"
               placeholderTextColor="#180A0A"
               returnKeyType="next"
+              keyboardType={'email-address'}
               theme={{
                 colors: {primary: 'black', underlineColor: 'transparent'},
               }}
@@ -170,6 +171,7 @@ const RegistrationOne = ({navigation}) => {
               label="lastName"
               returnKeyType="next"
               onSubmitEditing={Keyboard.dismiss}
+              keyboardType={'email-address'}
               theme={{
                 colors: {primary: 'black', underlineColor: 'transparent'},
               }}
@@ -198,6 +200,7 @@ const RegistrationOne = ({navigation}) => {
               placeholder="Enter mobile Number"
               onSubmitEditing={Keyboard.dismiss}
               returnKeyType="next"
+              keyboardType={'number-pad'}
               theme={{
                 colors: {primary: 'black', underlineColor: 'transparent'},
               }}

@@ -43,10 +43,10 @@ const RegistrationTwo = ({route, navigation}) => {
   const [BranchNameError, setBranchNameError] = useState('');
 
   const handleSubmitPress = async () => {
-    const regForBankName = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
-    const regAccountNumber = /^\d{9,18}$/;
+    const regForBankName = /[a-zA-Z][a-zA-Z .,'-]*$/;
+    const regAccountNumber = /^\d{1,18}$/;
     const regIFSC = /^[A-Z]{4}0[A-Z0-9]{6}$/;
-    const regForBranchName = /[a-zA-Z][0-9a-zA-Z .,'-]*$/;
+    const regForBranchName = /[a-zA-Z][a-zA-Z .,'-]*$/;
     if (userDetails.BankName === '') {
       setBankNameError('Please enter bank name');
     } else if (!regForBankName.test(userDetails.BankName)) {
@@ -156,6 +156,7 @@ const RegistrationTwo = ({route, navigation}) => {
               label="Account Number"
               returnKeyType="next"
               onSubmitEditing={Keyboard.dismiss}
+              keyboardType={'number-pad'}
               theme={{
                 colors: {primary: 'black', underlineColor: 'transparent'},
               }}

@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import React from 'react';
 
-import {useDispatch} from 'react-redux';
+
 
 const List = ({navigation}) => {
-  const disptach = useDispatch();
+  
   return (
     <View style={styles.container}>
       <ScrollView>

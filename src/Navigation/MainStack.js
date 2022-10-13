@@ -7,17 +7,21 @@ import Login from '../screen/Login';
 import RegistrationOne from '../screen/RegistrationOne';
 import RegistrationTwo from '../screen/RegistrationTwo';
 import RegistrationThree from '../screen/RegistrationThree';
-
 import Form from '../screen/Form';
 
 import ForgotPassword from '../components/ForgotPassword';
 import SideMenuStack from './SideMenuStack';
-
+import BottamStack from './BottamStack';
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="BottamStack"
+          component={BottamStack}
+        />
         <Stack.Screen
           options={{headerShown: false}}
           name="SideMenuStack"
