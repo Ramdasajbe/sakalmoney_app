@@ -124,7 +124,6 @@ const Form = ({navigation}) => {
   };
 
   const handleSubmitPress = async () => {
-    setloading(true);
     const regForDate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     const regForLoanAcNumberAndCBSACNumber = /^[A-Za-z]+$/;
     // if (userDetails.LoanAcNumber === '') {
@@ -160,7 +159,7 @@ const Form = ({navigation}) => {
     //   setCBSACNumberError('');
 
     //   setDateError('');
-
+    setloading(true);
     const bankName = branch?.bankName;
     const barachName = branch?.barachName;
     const branch_id = branch?._id;

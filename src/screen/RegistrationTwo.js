@@ -29,11 +29,11 @@ const RegistrationTwo = ({route, navigation}) => {
   const {firstName, lastName, emailId, mobileNumber} = route.params;
 
   const [userDetails, setuserDetails] = useState({
-    BankName: '',
-    AccountNumber: '',
+    BankName: 'abc',
+    AccountNumber: '34305518811',
 
-    BranchName: '',
-    IFSCCode: '',
+    BranchName: 'abc',
+    IFSCCode: 'SBIN0000035',
   });
 
   const [BankNameError, setBankNameError] = useState('');

@@ -6,17 +6,9 @@ import {Button, View, Text, TouchableOpacity, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-
-import Form from '../screen/Form';
-import Login from '../screen/Login';
-import RegistrationOne from '../screen/RegistrationOne';
-import RegistrationTwo from '../screen/RegistrationTwo';
-import Logout from '../components/Logout';
-import StatusWindow from '../screen/StatusWindow';
-import List from '../components/List';
-import UserProfile from '../screen/UserProfile';
-import DashboardScreen from '../screen/DashboardScreen';
 import Home from '../screen/Home';
+import UserProfile from '../screen/UserProfile';
+import {List} from '../components/List';
 import BottamStack from './BottamStack';
 
 const Stack = createStackNavigator();
@@ -113,11 +105,6 @@ function SideMenuStack() {
         activeTintColor: '#e91e63',
         itemStyle: {marginVertical: 5},
       }}>
-      <Drawer.Screen
-        name="Home"
-        options={{drawerLabel: 'Home'}}
-        component={BottamStack}
-      />
       <Drawer.Screen
         name="Profile"
         options={{drawerLabel: 'Profile'}}

@@ -12,6 +12,10 @@ import Form from '../screen/Form';
 import ForgotPassword from '../components/ForgotPassword';
 import SideMenuStack from './SideMenuStack';
 import BottamStack from './BottamStack';
+import DashboardScreen from '../screen/DashboardScreen';
+import {List} from '../components/List';
+import AgentLoanView from '../screen/AgentLoanView';
+import Profile from '../screen/UserProfile';
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
@@ -57,11 +61,26 @@ const MainStack = () => {
           name="ForgotPassword"
           component={ForgotPassword}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           options={{headerShown: false}}
-          name="Forms"
-          component={Form}
-        /> */}
+          name="DashboardScreen"
+          component={DashboardScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="List"
+          component={List}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="AgentLoanView"
+          component={AgentLoanView}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Profile"
+          component={Profile}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

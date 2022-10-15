@@ -31,11 +31,11 @@ const RegistrationOne = ({navigation}) => {
   //states for upload profile image
 
   const [userDetails, setuserDetails] = useState({
-    firstname: '',
-    lastName: '',
+    firstname: 'abc',
+    lastName: 'abc',
 
-    emailId: '',
-    mobileNumber: '',
+    emailId: 'a@gmail.com',
+    mobileNumber: '1212343456',
     profilePic: '',
   });
 

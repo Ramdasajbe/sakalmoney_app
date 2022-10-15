@@ -1,65 +1,182 @@
+import React, {Component} from 'react';
 import {
-  ScrollView,
   StyleSheet,
+  View,
   Text,
   TouchableOpacity,
-  View,
+  Alert,
+  Modal,
+  Image,
   Button,
 } from 'react-native';
-import React from 'react';
+import {ScrollView} from 'react-native-gesture-handler';
 
-
-
-const List = ({navigation}) => {
-  
+import {useState} from 'react';
+import {useEffect} from 'react';
+import axios from 'axios';
+import {ActivityIndicator, DataTable} from 'react-native-paper';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconHeader from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+export const List = ({navigation}) => {
+  const [tabledata, settabledata] = useState([]);
+  const [isVisible, setModalVisiblility] = useState(false);
+  useEffect(() => {
+    AgentLoanView();
+  }, []);
+  const AgentLoanView = async () => {
+    const agent_id = '6343c03016c7b447a82a33be';
+    await axios
+      .post('https://sakalmoneyapp.foxberry.link/v1/loan/getagentloan', {
+        agent_id,
+      })
+      .then(responce => {
+        if (responce) {
+          // console.log(responce.data.CBSAcNo);
+          settabledata(responce.data);
+        }
+      });
+  };
+  const deleteAgentLoanView = () => {
+    alert('delete');
+  };
+  // console.log('TabelData', tabledata);
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View
-          style={{
-            width: '35%',
-            marginTop: 20,
-            marginLeft: '50%',
-          }}>
-          <Button
-            onPress={() => {
-              navigation.navigate('Form');
-            }}
-            title="add new"
-            color="#00618a"
-            accessibilityLabel="Learn more about this purple button"
-          />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.iconHeader}>
+            <IconHeader
+              onPress={() => navigation.navigate('Profile')}
+              name="user"
+              size={30}
+              color="black"
+            />
+            <Text>Profile</Text>
+          </View>
         </View>
-        <View style={styles.container1}></View>
-      </ScrollView>
-    </View>
+        <View>
+          <View
+            style={{
+              width: '35%',
+              marginTop: 10,
+              marginLeft: '10%',
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Form');
+              }}>
+              <MaterialCommunityIcons
+                name="account-plus"
+                color={'#00618a'}
+                size={35}
+              />
+              <Text>Add new</Text>
+            </TouchableOpacity>
+            {/* <Button
+              onPress={() => {
+                navigation.navigate('Form');
+              }}
+              title="add new"
+            /> */}
+
+            {/* // color="#00618a" */}
+          </View>
+        </View>
+        <View style={styles.tablestyle}>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Agent Name</DataTable.Title>
+              <DataTable.Title>bankName</DataTable.Title>
+              <DataTable.Title>fileType</DataTable.Title>
+              <DataTable.Title>View</DataTable.Title>
+            </DataTable.Header>
+            {tabledata.length !== 0 ? (
+              tabledata.map((option, index) => {
+                // console.log('----option----', option);
+                return (
+                  <DataTable.Row key={index}>
+                    <DataTable.Cell>{option?.agentName}</DataTable.Cell>
+                    <DataTable.Cell>{option?.bankName}</DataTable.Cell>
+                    <DataTable.Cell>{option?.fileType}</DataTable.Cell>
+                    <DataTable.Cell>
+                      <FontAwesome
+                        onPress={async () => {
+                          const valuedata = option;
+                          console.log(option);
+                          await navigation.navigate('AgentLoanView', valuedata);
+                        }}
+                        name="eye"
+                        color={'green'}
+                        size={30}
+                      />
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                );
+              })
+            ) : (
+              <DataTable.Row>
+                {/* <Text>No data found</Text> */}
+                <ActivityIndicator />
+              </DataTable.Row>
+            )}
+          </DataTable>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
-export default List;
-
 const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: '#fff'},
+
   container: {
     flex: 1,
     width: '100%',
     height: '100%',
     backgroundColor: '#fff',
   },
-  cardButtonUpload: {
-    marginTop: 20,
-    width: '30%',
-    alignItems: 'center',
-    padding: 10,
-    height: 'auto',
-    elevation: 5,
-    borderRadius: 25,
-    margin: 20,
-    backgroundColor: '#00618a',
-    marginBottom: 10,
-    fontFamily: 'Montserrat-Thin',
+  tablestyle: {
+    paddingTop: 10,
+    paddingHorizontal: 5,
   },
-  container1: {
-    paddingTop: 20,
-    paddingHorizontal: 30,
+
+  centeredView1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  iconHeader: {
+    marginLeft: '75%',
+    margin: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  header: {
+    backgroundColor: '#F7EE78',
+  },
+  myModal: {
+    width: 300,
+    height: 300,
+
+    backgroundColor: 'white',
+    borderRadius: 20,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    marginBottom: 50,
   },
 });

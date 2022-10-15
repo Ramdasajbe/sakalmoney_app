@@ -13,54 +13,37 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {useDispatch} from 'react-redux';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {SingalLoanViewAction} from '../Redux/Action/SingalLoanViewAction';
+const Profile = ({route, navigation}) => {
+  const [loanViewData, setloanViewData] = useState();
+  const valuedata = route.params;
+  // console.log('valuedata', valuedata);
 
-const Profile = ({navigation}) => {
-  const [ProfileDetails, setProfileDetails] = useState('');
-  const statevalue = useSelector(state => state);
-  // console.log('statevalue from profile', statevalue.login.entities[0].user);
-  // useEffect(() => {
-  //   setProfileDetailTabelData s(statevalue);
-  // }, []);
+  // const dispatch = useDispatch();
 
-  const LogoutHandler = () => {
-    Alert.alert(
-      'Confirm',
-      'Are you sure you want to Logout?',
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: 'Login',
-                },
-              ],
-            });
-          },
-        },
-        {
-          text: 'No',
-          onPress: () => {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: 'Home',
-                },
-              ],
-            });
-          },
-        },
-      ],
-      {cancelable: true},
-    );
+  const SingalLoanView = async () => {
+    await axios
+      .post('https://sakalmoneyapp.foxberry.link/v1/loan/getsingleloan', {
+        agentLoan_id: valuedata._id,
+      })
+      .then(res => {
+        console.log('API Response', res.data);
+        setloanViewData(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
+  const SingalLoandelete = async () => {
+    await ax;
+  };
+
+  useEffect(() => {
+    SingalLoanView();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -74,55 +57,48 @@ const Profile = ({navigation}) => {
               color="white"
             />
           </View>
-          <Text style={styles.title1}>User Profile</Text>
+          <Text style={styles.title1}>Loan View</Text>
         </View>
         <View style={styles.userInfoSection}>
-          <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 20}}>
-            <Avatar.Image
-              source={{
-                uri: 'https://cdn2.iconfinder.com/data/icons/avatars-99/62/avatar-366-456318-512.png',
-              }}
-              size={80}
-            />
-
-            <View
-              style={{
-                marginLeft: 20,
-                fontSize: 15,
-                fontWeight: '400',
-                flexDirection: 'row',
-              }}>
-              <Title
-                style={[
-                  styles.title,
-                  {
-                    marginTop: 25,
-                    marginBottom: 35,
-                  },
-                ]}></Title>
-              <View>
-                <Text> </Text>
-              </View>
-              <View>
-                <Text> </Text>
-              </View>
-              <Title
-                style={[
-                  styles.title,
-                  {
-                    marginTop: 25,
-                    marginBottom: 35,
-                  },
-                ]}></Title>
-              <Caption style={styles.caption}></Caption>
-            </View>
-          </View>
-
           <View style={styles.userInfoSection}>
+            <View style={styles.row}>
+              {/* <Icon name="bank" color="#777777" size={20} /> */}
+              <View style={styles.TextViewStyle}>
+                <Text style={styles.TextStyle}>sanctionedLoanAmt</Text>
+              </View>
+              <Text
+                style={{
+                  color: '#777777',
+                  marginLeft: 20,
+                  fontSize: 15,
+                  fontWeight: '400',
+                }}>
+                {loanViewData?.sanctionedLoanAmt
+                  ? loanViewData?.sanctionedLoanAmt
+                  : ''}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              {/* <Icon name="bank" color="#777777" size={20} /> */}
+              <View style={styles.TextViewStyle}>
+                <Text style={styles.TextStyle}>nameOfCustomer</Text>
+              </View>
+              <Text
+                style={{
+                  color: '#777777',
+                  marginLeft: 20,
+                  fontSize: 15,
+                  fontWeight: '400',
+                }}>
+                {loanViewData?.nameOfCustomer
+                  ? loanViewData?.nameOfCustomer
+                  : ''}
+              </Text>
+            </View>
             <View style={styles.row}>
               {/* <Feather name="user" color="#777777" size={20} /> */}
               <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Name</Text>
+                <Text style={styles.TextStyle}>CBSAcNo</Text>
               </View>
               <Text
                 style={{
@@ -131,87 +107,14 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.firstName
-                  ? statevalue.login.entities[0].user.firstName
-                  : ''}
+                {loanViewData?.CBSAcNo ? loanViewData?.CBSAcNo : ''}
               </Text>
             </View>
-            <View style={styles.row}>
-              {/* <Icon name="phone" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Mobile Number</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {statevalue.login.entities[0].user.contactNo
-                  ? statevalue.login.entities[0].user.contactNo
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="email" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Email Id</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {statevalue.login.entities[0].user.emailId
-                  ? statevalue.login.entities[0].user.emailId
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="card-account-details" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Adhar Number</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {statevalue.login.entities[0].user.adharNo
-                  ? statevalue.login.entities[0].user.adharNo
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon
-                name="card-account-details-outline"
-                color="#777777"
-                size={20}
-              /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Pan Number</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {statevalue.login.entities[0].user.panNo
-                  ? statevalue.login.entities[0].user.panNo
-                  : ''}
-              </Text>
-            </View>
+
             <View style={styles.row}>
               {/* <Icon name="check" color="#777777" size={20} /> */}
               <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Is approved</Text>
+                <Text style={styles.TextStyle}>LOSId</Text>
               </View>
               <Text
                 style={{
@@ -220,15 +123,13 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.isApproved
-                  ? statevalue.login.entities[0].user.isApproved
-                  : ''}
+                {loanViewData?.LOSId ? loanViewData?.LOSId : ''}
               </Text>
             </View>
             <View style={styles.row}>
               {/* <Icon name="bank" color="#777777" size={20} /> */}
               <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Bank Name</Text>
+                <Text style={styles.TextStyle}>bankName</Text>
               </View>
               <Text
                 style={{
@@ -237,15 +138,13 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.bankName
-                  ? statevalue.login.entities[0].user.bankName
-                  : ''}
+                {loanViewData?.bankName ? loanViewData?.bankName : ''}
               </Text>
             </View>
             <View style={styles.row}>
               {/* <Icon name="bank" color="#777777" size={20} /> */}
               <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>Bank Account Number</Text>
+                <Text style={styles.TextStyle}>barachName</Text>
               </View>
               <Text
                 style={{
@@ -254,26 +153,48 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.bankAcNo
-                  ? statevalue.login.entities[0].user.bankAcNo
-                  : ''}
+                {loanViewData?.barachName ? loanViewData?.barachName : ''}
+              </Text>
+            </View>
+
+            <View style={styles.row}>
+              {/* <Icon name="bank" color="#777777" size={20} /> */}
+              <View style={styles.TextViewStyle}>
+                <Text style={styles.TextStyle}>disbDate</Text>
+              </View>
+              <Text
+                style={{
+                  color: '#777777',
+                  marginLeft: 20,
+                  fontSize: 15,
+                  fontWeight: '400',
+                }}>
+                {loanViewData?.disbDate ? loanViewData?.disbDate : ''}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              {/* <Icon name="bank" color="#777777" size={20} /> */}
+              <View style={styles.TextViewStyle}>
+                <Text style={styles.TextStyle}>sourcingDate</Text>
+              </View>
+              <Text
+                style={{
+                  color: '#777777',
+                  marginLeft: 20,
+                  fontSize: 15,
+                  fontWeight: '400',
+                }}>
+                {loanViewData?.sourcingDate ? loanViewData?.sourcingDate : ''}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => navigation.navigate('EditProfile')}>
+          <TouchableRipple onPress={() => SingalLoanView()}>
             <View style={styles.menuItem}>
               <Icon name="pen" color="#FF6347" size={25} />
-              <Text style={styles.menuItemText}>Edit Profile</Text>
-            </View>
-          </TouchableRipple>
-
-          <TouchableRipple onPress={() => LogoutHandler()}>
-            <View style={styles.menuItem}>
-              <Icon name="logout" color="#FF6347" size={25} />
-              <Text style={styles.menuItemText}>Logout</Text>
+              <Text style={styles.menuItemText}>Delete Loan</Text>
             </View>
           </TouchableRipple>
         </View>
@@ -307,6 +228,7 @@ const styles = StyleSheet.create({
   },
   userInfoSection: {
     paddingHorizontal: 20,
+    marginTop: 20,
   },
   title: {
     fontSize: 24,

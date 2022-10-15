@@ -1,15 +1,21 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const LoginAction = createAsyncThunk('loginActionLoding', content =>
-  axios
-    .post('http://43.204.38.56:4004/v1/user/login', content, {
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-    })
-    .then(response => response)
-    .catch(error => error),
+export const SingalLoanViewAction = createAsyncThunk(
+  'SingalLoanViewActionLoding',
+  content =>
+    axios
+      .post(
+        'https://sakalmoneyapp.foxberry.link/v1/loan/getsingleloan',
+        content,
+        {
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+          },
+        },
+      )
+      .then(response => response)
+      .catch(error => error),
 );
 
 // export const getAllIncidentAction = createAsyncThunk(

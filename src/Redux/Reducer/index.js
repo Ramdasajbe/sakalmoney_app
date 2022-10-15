@@ -22,7 +22,7 @@ import {createSlice} from '@reduxjs/toolkit';
 // import { updateUserReducer } from "./EditProfile/editProfile.reducer";
 // import { getPoliceStationReducer } from "./GetPoliceStation/getPoliceStation.reducer";
 // import { getAllVolunteerReducer } from "./auth/VolunteerRegister/volunteerRegister.reducer";
-import {LoginReducer} from './LoginReducer';
+import {LoginReducer} from './LoginReducer.reducer';
 const allReducers = createSlice({
   name: 'SakalMoney',
   initialState: {

@@ -12,7 +12,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import DetailsScreen from './pages/DetailsScreen';
 // import ProfileScreen from './pages/ProfileScreen';
 // import SettingsScreen from './pages/SettingsScreen';
-import List from '../components/List';
+import {List} from '../components/List';
 import Form from '../screen/Form';
 import StatusWindow from '../screen/StatusWindow';
 import UserProfile from '../screen/UserProfile';
@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 function DashBoard() {
   return (
     <Stack.Navigator
-      initialRouteName="List"
+      initialRouteName="DashboardScreen"
       screenOptions={{
         // headerStyle: {backgroundColor: '#42f44b'},
         headerShown: false,
@@ -43,7 +43,7 @@ function DashBoard() {
 function Loan() {
   return (
     <Stack.Navigator
-      initialRouteName="userProfile"
+      initialRouteName="List"
       screenOptions={{
         headerShown: false,
         // headerStyle: {backgroundColor: '#42f44b'},
