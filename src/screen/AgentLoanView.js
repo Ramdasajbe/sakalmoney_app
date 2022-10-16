@@ -13,32 +13,44 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import IconHeader from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {SingalLoanViewAction} from '../Redux/Action/SingalLoanViewAction';
 const Profile = ({route, navigation}) => {
+  const LoginData = useSelector(state => state);
   const [loanViewData, setloanViewData] = useState();
   const valuedata = route.params;
-  // console.log('valuedata', valuedata);
 
-  // const dispatch = useDispatch();
-
+  // console.log(' valuedata._id', valuedata._id);
   const SingalLoanView = async () => {
     await axios
       .post('https://sakalmoneyapp.foxberry.link/v1/loan/getsingleloan', {
         agentLoan_id: valuedata._id,
       })
       .then(res => {
-        console.log('API Response', res.data);
+        // console.log('API Response', res.data);
         setloanViewData(res.data);
       })
       .catch(err => {
-        console.log(err);
+        console.log('---error in SingalLoanView', err);
       });
   };
   const SingalLoandelete = async () => {
-    await ax;
+    const loan_id = valuedata._id;
+    const updatedBy = LoginData.login.entities[0].user._id;
+
+    await axios
+      .put('https://sakalmoneyapp.foxberry.link/v1/loan/getagentloan', {
+        loan_id,
+        updatedBy,
+      })
+      .then(res => {
+        console.log('----responce from delete agent loan view', res.data);
+      })
+      .catch(err => {
+        console.log('----error from delete agent loan view', err);
+      });
   };
 
   useEffect(() => {
@@ -191,17 +203,13 @@ const Profile = ({route, navigation}) => {
         </View>
 
         <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => SingalLoanView()}>
+          <TouchableRipple onPress={() => SingalLoandelete()}>
             <View style={styles.menuItem}>
               <Icon name="pen" color="#FF6347" size={25} />
               <Text style={styles.menuItemText}>Delete Loan</Text>
             </View>
           </TouchableRipple>
         </View>
-      </View>
-
-      <View style={styles.appVersion}>
-        <Text style={{textAlign: 'center'}}>App version:1.0.0</Text>
       </View>
     </View>
   );

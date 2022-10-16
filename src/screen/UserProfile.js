@@ -51,7 +51,7 @@ const Profile = ({navigation}) => {
               index: 0,
               routes: [
                 {
-                  name: 'Home',
+                  name: 'Profile',
                 },
               ],
             });
@@ -68,7 +68,7 @@ const Profile = ({navigation}) => {
         <View style={styles.header}>
           <View style={styles.iconHeader}>
             <IconHeader
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate('List')}
               name="angle-left"
               size={30}
               color="white"
@@ -277,10 +277,6 @@ const Profile = ({navigation}) => {
             </View>
           </TouchableRipple>
         </View>
-      </View>
-
-      <View style={styles.appVersion}>
-        <Text style={{textAlign: 'center'}}>App version:1.0.0</Text>
       </View>
     </View>
   );

@@ -22,7 +22,7 @@ import Snackbar from 'react-native-snackbar';
 import {useSelector} from 'react-redux';
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
-  const [mobile, setMobile] = useState('1234512345');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('123');
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');

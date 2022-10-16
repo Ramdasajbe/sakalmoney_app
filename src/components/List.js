@@ -18,28 +18,30 @@ import {ActivityIndicator, DataTable} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconHeader from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 export const List = ({navigation}) => {
+  const LoginData = useSelector(state => state);
+  console.log(LoginData.login.entities[0]);
   const [tabledata, settabledata] = useState([]);
   const [isVisible, setModalVisiblility] = useState(false);
   useEffect(() => {
     AgentLoanView();
   }, []);
   const AgentLoanView = async () => {
-    const agent_id = '6343c03016c7b447a82a33be';
+    const agent_id = LoginData.login.entities[0].user._id;
+
+    console.log(agent_id);
     await axios
       .post('https://sakalmoneyapp.foxberry.link/v1/loan/getagentloan', {
         agent_id,
       })
       .then(responce => {
-        if (responce) {
-          // console.log(responce.data.CBSAcNo);
+        if (responce.data !== 'No data found') {
           settabledata(responce.data);
         }
       });
   };
-  const deleteAgentLoanView = () => {
-    alert('delete');
-  };
+
   // console.log('TabelData', tabledata);
   return (
     <ScrollView>
@@ -91,8 +93,8 @@ export const List = ({navigation}) => {
               <DataTable.Title>fileType</DataTable.Title>
               <DataTable.Title>View</DataTable.Title>
             </DataTable.Header>
-            {tabledata.length !== 0 ? (
-              tabledata.map((option, index) => {
+            {tabledata?.length != 'undefined' ? (
+              tabledata?.map((option, index) => {
                 // console.log('----option----', option);
                 return (
                   <DataTable.Row key={index}>

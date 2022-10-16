@@ -27,7 +27,13 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 const RegistrationTwo = ({route, navigation}) => {
   const {firstName, lastName, emailId, mobileNumber} = route.params;
-
+  // console.log(
+  //   'firstName, lastName, emailId, mobileNumber',
+  //   firstName,
+  //   lastName,
+  //   emailId,
+  //   mobileNumber,
+  // );
   const [userDetails, setuserDetails] = useState({
     BankName: 'abc',
     AccountNumber: '34305518811',

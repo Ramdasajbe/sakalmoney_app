@@ -26,6 +26,7 @@ import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import {Picker} from '@react-native-picker/picker';
 import {useRef} from 'react';
+import {useSelector} from 'react-redux';
 const Form = ({navigation}) => {
   const [filetype, setfiletype] = useState();
   const [bankvalue, setbankvalue] = useState('');
@@ -70,7 +71,7 @@ const Form = ({navigation}) => {
     // policeStationUserId: PoliceData._id,
     // policeRole: PoliceData.policeRole,
   });
-
+  const LoginData = useSelector(state => state);
   function showSorcingdatepicker() {
     setSourceingdatePicker(true);
   }
@@ -122,101 +123,85 @@ const Form = ({navigation}) => {
         });
     }
   };
-
+  const agentInfo = LoginData.login.entities[0];
+  console.log('agentInfo', agentInfo);
   const handleSubmitPress = async () => {
     const regForDate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const regForLoanAcNumberAndCBSACNumber = /^[A-Za-z]+$/;
-    // if (userDetails.LoanAcNumber === '') {
-    //   setLoanAcNumberError('Please enter first name');
-    // } else if (
-    //   !regForLoanAcNumberAndCBSACNumber.test(userDetails.LoanAcNumber)
-    // ) {
-    //   setLoanAcNumberError('Invalid First Name');
-    // } else if (userDetails.CBSACNumber === '') {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('Please enter last name');
-    // } else if (
-    //   !regForLoanAcNumberAndCBSACNumber.test(userDetails.CBSACNumber)
-    // ) {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('Invalid Last Name');
-    // } else if (userDetails.Date === '') {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('');
-    //   setDateError('Please enter Date Id');
-    // } else if (!regForDate.test(userDetails.Date)) {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('');
+    const regForLoanAcNumber = /^[A-Za-z]+$/;
+    if (userDetails.LoanAcNumber === '') {
+      setLoanAcNumberError('Please enter Loan Account Numbr');
+    } else if (!regForLoanAcNumber.test(userDetails.LoanAcNumber)) {
+      setLoanAcNumberError('Invalid Loan Account Number');
+    } else if (userDetails.CBSACNumber === '') {
+      setLoanAcNumberError('');
+      setCBSACNumberError('Please enter CBS Number');
+    } else if (!regForLoanAcNumber.test(userDetails.CBSACNumber)) {
+      setLoanAcNumberError('');
+      setCBSACNumberError('Invalid CBS Number');
+    } else {
+      setLoanAcNumberError('');
+      setCBSACNumberError('');
 
-    //   setDateError('Invalid Date');
-    // } else if (userDetails.YearOfBirth === '') {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('');
+      const bankName = branch?.bankName;
+      const barachName = branch?.barachName;
+      const branch_id = branch?._id;
+      const code = branch?.code;
+      const fileType = filetype;
+      const nameOfCustomer = 'test';
+      const sourcingDate = sourcing.toDateString();
+      const disbDate = Disbersment.toDateString();
+      const sanctionedLoanAmt = userDetails?.SanctionLoanAmount;
+      const CBSAcNo = userDetails?.CBSACNumber;
+      const LOSId = userDetails.LoanAcNumber;
+      const agent_id = agentInfo?._id;
+      const agentName = agentInfo?.firstName;
+      const agentContactNo = agentInfo?.contactNo;
+      const agentId = agentInfo?.agentId;
+      const user = {
+        agent_id,
+        agentName,
+        agentContactNo,
+        agentId,
+        LOSId,
+        bankName,
+        barachName,
+        branch_id,
+        fileType,
+        sourcingDate,
+        disbDate,
+        sanctionedLoanAmt,
+        code,
+        nameOfCustomer,
+        CBSAcNo,
+      };
 
-    //   setDateError('');
-    // } else {
-    //   setLoanAcNumberError('');
-    //   setCBSACNumberError('');
+      await axios
+        .post('https://sakalmoneyapp.foxberry.link/v1/loan/addloan', user)
+        .then(response => {
+          if (response.status == 200) {
+            setloading(false);
+            console.log('----responce from add loan----', response.data);
 
-    //   setDateError('');
-    setloading(true);
-    const bankName = branch?.bankName;
-    const barachName = branch?.barachName;
-    const branch_id = branch?._id;
-    const code = branch?.code;
-    const fileType = filetype;
-    const nameOfCustomer = 'test';
-    const sourcingDate = sourcing.toDateString();
-    const disbDate = Disbersment.toDateString();
-    const sanctionedLoanAmt = userDetails?.SanctionLoanAmount;
-    const CBSAcNo = userDetails?.CBSACNumber;
-    const LOSId = userDetails.LoanAcNumber;
-
-    const user = {
-      agent_id: '6343c03016c7b447a82a33be',
-      agentName: 'Test',
-      agentContactNo: '1234512345',
-      agentId: '1234567901',
-      LOSId,
-      bankName,
-      barachName,
-      branch_id,
-      fileType,
-      sourcingDate,
-      disbDate,
-      sanctionedLoanAmt,
-      code,
-      nameOfCustomer,
-      CBSAcNo,
-    };
-
-    await axios
-      .post('https://sakalmoneyapp.foxberry.link/v1/loan/addloan', user)
-      .then(response => {
-        if (response.status == 200) {
+            Snackbar.show({
+              text: 'form submitted successfully',
+              duration: Snackbar.LENGTH_SHORT,
+              textColor: 'white',
+              backgroundColor: 'green',
+            });
+            // navigation.navigate('List');
+          }
+        })
+        .catch(error => {
           setloading(false);
-          console.log('----responce from add loan----', response.data);
-
+          console.log('----responce from error in add loan---', error);
           Snackbar.show({
-            text: 'form submitted successfully',
+            text: 'Please enter correct credentials',
             duration: Snackbar.LENGTH_SHORT,
             textColor: 'white',
-            backgroundColor: 'green',
+            backgroundColor: 'red',
           });
-          navigation.navigate('List');
-        }
-      })
-      .catch(error => {
-        setloading(false);
-        console.log('----responce from error in add loan---', error);
-        Snackbar.show({
-          text: 'Please enter correct credentials',
-          duration: Snackbar.LENGTH_SHORT,
-          textColor: 'white',
-          backgroundColor: 'red',
         });
-      });
-    // }
+    }
   };
 
   return (
