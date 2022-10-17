@@ -20,16 +20,19 @@ import {SingalLoanViewAction} from '../Redux/Action/SingalLoanViewAction';
 const Profile = ({route, navigation}) => {
   const LoginData = useSelector(state => state);
   const [loanViewData, setloanViewData] = useState();
+  const [loading, setloading] = useState(false);
   const valuedata = route.params;
 
   // console.log(' valuedata._id', valuedata._id);
   const SingalLoanView = async () => {
+    setloading(true);
     await axios
       .post('https://sakalmoneyapp.foxberry.link/v1/loan/getsingleloan', {
         agentLoan_id: valuedata._id,
       })
       .then(res => {
         // console.log('API Response', res.data);
+        setloading(false);
         setloanViewData(res.data);
       })
       .catch(err => {
@@ -41,12 +44,19 @@ const Profile = ({route, navigation}) => {
     const updatedBy = LoginData.login.entities[0].user._id;
 
     await axios
-      .put('https://sakalmoneyapp.foxberry.link/v1/loan/getagentloan', {
+      .put('https://sakalmoneyapp.foxberry.link/v1/loan/deletaagentloan', {
         loan_id,
         updatedBy,
       })
       .then(res => {
         console.log('----responce from delete agent loan view', res.data);
+        if (res.status === 200) {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'List'}],
+          });
+          alert('deleted successfully');
+        }
       })
       .catch(err => {
         console.log('----error from delete agent loan view', err);
@@ -59,159 +69,323 @@ const Profile = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.header}>
-          <View style={styles.iconHeader}>
-            <IconHeader
-              onPress={() => navigation.goBack()}
-              name="angle-left"
-              size={30}
-              color="white"
-            />
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={60} />
+        </View>
+      ) : (
+        <View>
+          <View>
+            <View style={styles.header}>
+              <View style={styles.iconHeader}>
+                <IconHeader
+                  onPress={() => navigation.goBack()}
+                  name="angle-left"
+                  size={30}
+                  color="white"
+                />
+              </View>
+              <Text style={styles.title1}>Loan View</Text>
+            </View>
+            <View style={styles.userInfoSection}>
+              <View style={styles.userInfoSection}>
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>sanctionedLoanAmt</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.sanctionedLoanAmt
+                      ? loanViewData?.sanctionedLoanAmt
+                      : ''}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>nameOfCustomer</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.nameOfCustomer
+                      ? loanViewData?.nameOfCustomer
+                      : ''}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  {/* <Feather name="user" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>CBSAcNo</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.CBSAcNo ? loanViewData?.CBSAcNo : ''}
+                  </Text>
+                </View>
+
+                <View style={styles.row}>
+                  {/* <Icon name="check" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>LOSId</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.LOSId ? loanViewData?.LOSId : ''}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>bankName</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.bankName ? loanViewData?.bankName : ''}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>barachName</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.barachName ? loanViewData?.barachName : ''}
+                  </Text>
+                </View>
+
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>disbDate</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.disbDate ? loanViewData?.disbDate : ''}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  {/* <Icon name="bank" color="#777777" size={20} /> */}
+                  <View style={styles.TextViewStyle}>
+                    <Text style={styles.TextStyle}>sourcingDate</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: '#777777',
+                      marginLeft: 20,
+                      fontSize: 15,
+                      fontWeight: '400',
+                    }}>
+                    {loanViewData?.sourcingDate
+                      ? loanViewData?.sourcingDate
+                      : ''}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.menuWrapper}>
+              <TouchableRipple onPress={() => SingalLoandelete()}>
+                <View style={styles.menuItem}>
+                  <Icon name="pen" color="#FF6347" size={25} />
+                  <Text style={styles.menuItemText}>Delete Loan</Text>
+                </View>
+              </TouchableRipple>
+            </View>
           </View>
-          <Text style={styles.title1}>Loan View</Text>
         </View>
-        <View style={styles.userInfoSection}>
-          <View style={styles.userInfoSection}>
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>sanctionedLoanAmt</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.sanctionedLoanAmt
-                  ? loanViewData?.sanctionedLoanAmt
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>nameOfCustomer</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.nameOfCustomer
-                  ? loanViewData?.nameOfCustomer
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Feather name="user" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>CBSAcNo</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.CBSAcNo ? loanViewData?.CBSAcNo : ''}
-              </Text>
-            </View>
-
-            <View style={styles.row}>
-              {/* <Icon name="check" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>LOSId</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.LOSId ? loanViewData?.LOSId : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>bankName</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.bankName ? loanViewData?.bankName : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>barachName</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.barachName ? loanViewData?.barachName : ''}
-              </Text>
-            </View>
-
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>disbDate</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.disbDate ? loanViewData?.disbDate : ''}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              {/* <Icon name="bank" color="#777777" size={20} /> */}
-              <View style={styles.TextViewStyle}>
-                <Text style={styles.TextStyle}>sourcingDate</Text>
-              </View>
-              <Text
-                style={{
-                  color: '#777777',
-                  marginLeft: 20,
-                  fontSize: 15,
-                  fontWeight: '400',
-                }}>
-                {loanViewData?.sourcingDate ? loanViewData?.sourcingDate : ''}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => SingalLoandelete()}>
-            <View style={styles.menuItem}>
-              <Icon name="pen" color="#FF6347" size={25} />
-              <Text style={styles.menuItemText}>Delete Loan</Text>
-            </View>
-          </TouchableRipple>
-        </View>
-      </View>
+      )}
     </View>
+    // <View style={styles.container}>
+    //   <View>
+    //     <View style={styles.header}>
+    //       <View style={styles.iconHeader}>
+    //         <IconHeader
+    //           onPress={() => navigation.goBack()}
+    //           name="angle-left"
+    //           size={30}
+    //           color="white"
+    //         />
+    //       </View>
+    //       <Text style={styles.title1}>Loan View</Text>
+    //     </View>
+    //     <View style={styles.userInfoSection}>
+    //       <View style={styles.userInfoSection}>
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>sanctionedLoanAmt</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.sanctionedLoanAmt
+    //               ? loanViewData?.sanctionedLoanAmt
+    //               : ''}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>nameOfCustomer</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.nameOfCustomer
+    //               ? loanViewData?.nameOfCustomer
+    //               : ''}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.row}>
+    //           {/* <Feather name="user" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>CBSAcNo</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.CBSAcNo ? loanViewData?.CBSAcNo : ''}
+    //           </Text>
+    //         </View>
+
+    //         <View style={styles.row}>
+    //           {/* <Icon name="check" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>LOSId</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.LOSId ? loanViewData?.LOSId : ''}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>bankName</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.bankName ? loanViewData?.bankName : ''}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>barachName</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.barachName ? loanViewData?.barachName : ''}
+    //           </Text>
+    //         </View>
+
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>disbDate</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.disbDate ? loanViewData?.disbDate : ''}
+    //           </Text>
+    //         </View>
+    //         <View style={styles.row}>
+    //           {/* <Icon name="bank" color="#777777" size={20} /> */}
+    //           <View style={styles.TextViewStyle}>
+    //             <Text style={styles.TextStyle}>sourcingDate</Text>
+    //           </View>
+    //           <Text
+    //             style={{
+    //               color: '#777777',
+    //               marginLeft: 20,
+    //               fontSize: 15,
+    //               fontWeight: '400',
+    //             }}>
+    //             {loanViewData?.sourcingDate ? loanViewData?.sourcingDate : ''}
+    //           </Text>
+    //         </View>
+    //       </View>
+    //     </View>
+
+    //     <View style={styles.menuWrapper}>
+    //       <TouchableRipple onPress={() => SingalLoandelete()}>
+    //         <View style={styles.menuItem}>
+    //           <Icon name="pen" color="#FF6347" size={25} />
+    //           <Text style={styles.menuItemText}>Delete Loan</Text>
+    //         </View>
+    //       </TouchableRipple>
+    //     </View>
+    //   </View>
+    // </View>
   );
 };
 

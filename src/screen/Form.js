@@ -123,11 +123,10 @@ const Form = ({navigation}) => {
         });
     }
   };
-  const agentInfo = LoginData.login.entities[0];
-  console.log('agentInfo', agentInfo);
+  const agentInfo = LoginData.login.entities[0].user;
+  // console.log('agentInfo', agentInfo._id);
   const handleSubmitPress = async () => {
-    const regForDate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    const regForLoanAcNumber = /^[A-Za-z]+$/;
+    const regForLoanAcNumber = /[0-9]*$/;
     if (userDetails.LoanAcNumber === '') {
       setLoanAcNumberError('Please enter Loan Account Numbr');
     } else if (!regForLoanAcNumber.test(userDetails.LoanAcNumber)) {
@@ -188,7 +187,10 @@ const Form = ({navigation}) => {
               textColor: 'white',
               backgroundColor: 'green',
             });
-            // navigation.navigate('List');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'List'}],
+            });
           }
         })
         .catch(error => {

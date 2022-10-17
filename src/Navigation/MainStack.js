@@ -16,6 +16,7 @@ import DashboardScreen from '../screen/DashboardScreen';
 import {List} from '../components/List';
 import AgentLoanView from '../screen/AgentLoanView';
 import Profile from '../screen/UserProfile';
+import EditProfile from '../screen/EditProfile';
 const MainStack = () => {
   const Stack = createStackNavigator();
   return (
@@ -80,6 +81,11 @@ const MainStack = () => {
           options={{headerShown: false}}
           name="Profile"
           component={Profile}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="EditProfile"
+          component={EditProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>

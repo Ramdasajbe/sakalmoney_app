@@ -29,6 +29,7 @@ export default RegistrationThree = ({route, navigation}) => {
     BankName,
     AccountNumber,
     IFSCCode,
+    password,
   } = route.params;
   // console.log(
   //   '----params data---',
@@ -101,7 +102,7 @@ export default RegistrationThree = ({route, navigation}) => {
         cancelChequeurl,
         isApproved: false,
         createdBy: '632d7e9be5243ea1a82ab7ce',
-        hashedPassword: '123',
+        hashedPassword: password,
       };
 
       await axios

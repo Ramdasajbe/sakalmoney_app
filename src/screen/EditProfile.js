@@ -27,7 +27,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {PickerImageSourceModal} from '../components/PickerImageSourceModal';
 
 import {mainSlice} from '../Redux/Slice/Main';
-const RegistrationOne = ({navigation}) => {
+const EditProfile = ({navigation}) => {
   //states for upload profile image
 
   const [userDetails, setuserDetails] = useState({
@@ -69,16 +69,6 @@ const RegistrationOne = ({navigation}) => {
     } else if (!lastNamePattern.test(userDetails.lastName)) {
       setfirstnameError('');
       setlastNameError('Invalid Last Name');
-    } else if (userDetails.mobileNumber === '') {
-      setfirstnameError('');
-      setlastNameError('');
-
-      setmobileNumberError('Please enter mobile number');
-    } else if (!mobilePattern.test(userDetails.mobileNumber)) {
-      setfirstnameError('');
-      setlastNameError('');
-
-      setmobileNumberError('Enter valid mobile Number');
     } else if (userDetails.emailId === '') {
       setfirstnameError('');
       setlastNameError('');
@@ -132,7 +122,7 @@ const RegistrationOne = ({navigation}) => {
             {/* <Text style={styles.title1}>Registration</Text> */}
           </View>
           <View style={styles.title}>
-            <Text style={styles.title1}>Registration Form</Text>
+            <Text style={styles.title1}>Edit Profile</Text>
           </View>
           <View style={styles.cardOne}>
             <TextInput
@@ -191,63 +181,6 @@ const RegistrationOne = ({navigation}) => {
             </Text>
           </View>
 
-          <View style={styles.cardOne}>
-            <TextInput
-              placeholderTextColor="#180A0A"
-              value={userDetails.mobileNumber}
-              onChangeText={mobileNumber =>
-                setuserDetails({...userDetails, mobileNumber})
-              }
-              mode="outlined"
-              label="mobile Number"
-              placeholder="Enter mobile Number"
-              onSubmitEditing={Keyboard.dismiss}
-              returnKeyType="next"
-              keyboardType={'number-pad'}
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name={'mobile-phone'} size={25} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {mobileNumberError.length > 0 && <Text>{mobileNumberError}</Text>}
-            </Text>
-          </View>
-
-          <View style={styles.cardOne}>
-            <TextInput
-              placeholderTextColor="#180A0A"
-              value={userDetails.password}
-              onChangeText={password =>
-                setuserDetails({...userDetails, password})
-              }
-              mode="outlined"
-              label="password"
-              placeholder="Enter password"
-              onSubmitEditing={Keyboard.dismiss}
-              returnKeyType="next"
-              // keyboardType={'number-pad'}
-              theme={{
-                colors: {primary: 'black', underlineColor: 'transparent'},
-              }}
-              left={
-                <TextInput.Icon
-                  name={() => <IconHeader name={'lock'} size={25} />}
-                />
-              }
-            />
-          </View>
-          <View style={styles.carderror}>
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: '#ff0000'}}>
-              {passwordError.length > 0 && <Text>{passwordError}</Text>}
-            </Text>
-          </View>
           <View style={styles.cardOne}>
             <TextInput
               placeholderTextColor="#180A0A"
@@ -330,7 +263,7 @@ const RegistrationOne = ({navigation}) => {
   );
 };
 
-export default RegistrationOne;
+export default EditProfile;
 
 const {height, width} = Dimensions.get('screen');
 const height_logo = height * 0.28;

@@ -21,7 +21,7 @@ import {useSelector} from 'react-redux';
 const Profile = ({navigation}) => {
   const [ProfileDetails, setProfileDetails] = useState('');
   const statevalue = useSelector(state => state);
-  // console.log('statevalue from profile', statevalue.login.entities[0].user);
+  console.log('statevalue from profile', statevalue.login.entities);
   // useEffect(() => {
   //   setProfileDetailTabelData s(statevalue);
   // }, []);
@@ -68,7 +68,7 @@ const Profile = ({navigation}) => {
         <View style={styles.header}>
           <View style={styles.iconHeader}>
             <IconHeader
-              onPress={() => navigation.navigate('List')}
+              onPress={() => navigation.navigate('BottamStack')}
               name="angle-left"
               size={30}
               color="white"
@@ -131,8 +131,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.firstName
-                  ? statevalue.login.entities[0].user.firstName
+                {statevalue?.login?.entities[0]?.user?.firstName
+                  ? statevalue?.login?.entities[0]?.user?.firstName
                   : ''}
               </Text>
             </View>
@@ -148,8 +148,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.contactNo
-                  ? statevalue.login.entities[0].user.contactNo
+                {statevalue?.login?.entities[0]?.user?.contactNo
+                  ? statevalue?.login?.entities[0]?.user?.contactNo
                   : ''}
               </Text>
             </View>
@@ -165,8 +165,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.emailId
-                  ? statevalue.login.entities[0].user.emailId
+                {statevalue?.login?.entities[0]?.user?.emailId
+                  ? statevalue?.login?.entities[0]?.user?.emailId
                   : ''}
               </Text>
             </View>
@@ -182,8 +182,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.adharNo
-                  ? statevalue.login.entities[0].user.adharNo
+                {statevalue?.login?.entities[0]?.user?.adharNo
+                  ? statevalue?.login?.entities[0]?.user?.adharNo
                   : ''}
               </Text>
             </View>
@@ -203,8 +203,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.panNo
-                  ? statevalue.login.entities[0].user.panNo
+                {statevalue?.login?.entities[0]?.user?.panNo
+                  ? statevalue?.login?.entities[0]?.user?.panNo
                   : ''}
               </Text>
             </View>
@@ -220,9 +220,15 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.isApproved
-                  ? statevalue.login.entities[0].user.isApproved
-                  : ''}
+                {statevalue?.login?.entities[0]?.user?.isApproved ? (
+                  <View>
+                    <Text>True</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text>False</Text>
+                  </View>
+                )}
               </Text>
             </View>
             <View style={styles.row}>
@@ -237,8 +243,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.bankName
-                  ? statevalue.login.entities[0].user.bankName
+                {statevalue?.login?.entities[0]?.user?.bankName
+                  ? statevalue?.login?.entities[0]?.user?.bankName
                   : ''}
               </Text>
             </View>
@@ -254,8 +260,8 @@ const Profile = ({navigation}) => {
                   fontSize: 15,
                   fontWeight: '400',
                 }}>
-                {statevalue.login.entities[0].user.bankAcNo
-                  ? statevalue.login.entities[0].user.bankAcNo
+                {statevalue?.login?.entities[0]?.user?.bankAcNo
+                  ? statevalue?.login?.entities[0]?.user?.bankAcNo
                   : ''}
               </Text>
             </View>
@@ -263,7 +269,12 @@ const Profile = ({navigation}) => {
         </View>
 
         <View style={styles.menuWrapper}>
-          <TouchableRipple onPress={() => navigation.navigate('EditProfile')}>
+          <TouchableRipple
+            onPress={() => {
+              if (statevalue?.login?.entities[0]?.user?.isApproved === false) {
+                navigation.navigate('EditProfile');
+              }
+            }}>
             <View style={styles.menuItem}>
               <Icon name="pen" color="#FF6347" size={25} />
               <Text style={styles.menuItemText}>Edit Profile</Text>

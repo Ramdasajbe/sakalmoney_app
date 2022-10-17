@@ -64,7 +64,7 @@ const Login = ({navigation}) => {
             alert('Please enter correct credentials');
           } else if (response.payload.data) {
             setLoading(false);
-            // console.log('--response in login page--', response.data);
+            console.log('--response in login page--', response.payload.data);
             Snackbar.show({
               text: 'Login Successfully',
               duration: Snackbar.LENGTH_SHORT,

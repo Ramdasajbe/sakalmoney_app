@@ -26,7 +26,7 @@ import IconHeader from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 const RegistrationTwo = ({route, navigation}) => {
-  const {firstName, lastName, emailId, mobileNumber} = route.params;
+  const {firstName, lastName, emailId, mobileNumber, password} = route.params;
   // console.log(
   //   'firstName, lastName, emailId, mobileNumber',
   //   firstName,
@@ -95,6 +95,7 @@ const RegistrationTwo = ({route, navigation}) => {
         lastName,
         emailId,
         mobileNumber,
+        password,
         BankName,
         AccountNumber,
         IFSCCode,
